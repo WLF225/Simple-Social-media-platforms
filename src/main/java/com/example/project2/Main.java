@@ -11,7 +11,7 @@ public class Main extends Application {
     public static DLinkedList<User> userList = new DLinkedList<>();
     @Override
     public void start(Stage stage) throws IOException {
-        Scene scene = new Scene(new MainMenu());
+        Scene scene = new Scene(new MainMenu(stage));
         stage.setTitle("Main Menu");
         stage.setMaximized(true);
         stage.setScene(scene);

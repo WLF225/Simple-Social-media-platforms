@@ -59,14 +59,14 @@ public class Post implements Comparable<Post> {
     }
 
     public void setDate(String date) {
-        if (date.matches("\\d{4}.\\d{2}.\\d{2}")){
+        if (date.matches("\\d{1,2}.\\d{1,2}.\\d{4}")) {
 
             String[] dateParts = date.split("\\.");
             int[] dateInt = new int[3];
             for (int i = 0; i < dateParts.length; i++) {
                 dateInt[i] = Integer.parseInt(dateParts[i]);
             }
-            GregorianCalendar gc = new GregorianCalendar(dateInt[0], dateInt[1]-1, dateInt[2]);
+            GregorianCalendar gc = new GregorianCalendar(dateInt[2], dateInt[1]-1, dateInt[0]);
             if (gc.get(Calendar.YEAR) < 2000)
                 throw new AlertException("The program was invented in 2000.");
             if (System.currentTimeMillis() < gc.getTimeInMillis())
