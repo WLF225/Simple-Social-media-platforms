@@ -17,6 +17,16 @@ public class Post implements Comparable<Post> {
         setContent(content);
         setDate(date);
         setSharedTo(sharedTo);
+        //To add the post created to the user
+        DNode<User> user = Main.getUserFromID(creatorID);
+        user.getData().getPosts().insetSorted(this);
+        //To add it tho friends shared with
+        DNode<Integer> currInt = sharedTo.getHead().getNext();
+        while (currInt != sharedTo.getHead()) {
+            DNode<User> friend = Main.getUserFromID(currInt.getData());
+            friend.getData().getPostsSharedWith().insetSorted(this);
+            currInt = currInt.getNext();
+        }
     }
 
     public int getId() {
@@ -41,8 +51,7 @@ public class Post implements Comparable<Post> {
         DNode<User> user = Main.getUserFromID(creatorID);
         if (user == null)
             throw new AlertException("This user does not exist.");
-        //To add the post created to the user
-        user.getData().getPosts().insetSorted(this);
+
         this.creatorID = creatorID;
     }
 
@@ -81,6 +90,16 @@ public class Post implements Comparable<Post> {
         return sharedTo;
     }
 
+    public String sharedToToString() {
+        DNode<Integer> curr = sharedTo.getHead();
+            String sharedToString = "";
+            while (curr.getNext() != sharedTo.getHead()) {
+                curr = curr.getNext();
+                sharedToString += ","+curr.getData();
+            }
+            return sharedToString;
+    }
+
     public void setSharedTo(DLinkedList<Integer> sharedTo) {
         sharedTo.removeDuplicates();
         DNode<Integer> currInt = sharedTo.getHead().getNext();
@@ -90,7 +109,7 @@ public class Post implements Comparable<Post> {
             DNode<User> friend = creator.getData().getFriendFromId(currInt.getData());
             if (friend == null)
                 throw new AlertException("This user can only share to his friends.");
-            friend.getData().getPostsSharedWith().insetSorted(this);
+
             currInt = currInt.getNext();
         }
         this.sharedTo = sharedTo;
@@ -120,6 +139,10 @@ public class Post implements Comparable<Post> {
     @Override
     public String toString() {
         return "ID: " + id + ", CreatorID: " + creatorID + ", Content: " + content + ", Date: " + date;
+    }
+
+    public String print(){
+        return id + "," + creatorID + "," + content + "," + date + sharedToToString();
     }
 
 

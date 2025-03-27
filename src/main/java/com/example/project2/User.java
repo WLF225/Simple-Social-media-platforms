@@ -111,9 +111,12 @@ public class User implements Comparable<User> {
         if (exists != null)
             throw new AlertException("The friend with id "+id+" already added.");
         friends.insetSorted(friend.getData());
+        friend.getData().getFriends().insetSorted(this);
     }
 
     public DNode<User> getFriendFromId(int id) {
+        if (friends.isEmpty())
+            return null;
         DNode<User> curr = friends.getHead().getNext();
         while (curr != friends.getHead()){
             if (curr.getData().getId() == id)
@@ -123,4 +126,17 @@ public class User implements Comparable<User> {
         return null;
     }
 
+    public String print(){
+        return id + "," + name + "," + age;
+    }
+
+    public String printFriends(){
+        String friendsString = id+"";
+        DNode<User> curr = friends.getHead().getNext();
+        while (curr != friends.getHead()) {
+            friendsString += ","+curr.getData().getId();
+            curr = curr.getNext();
+        }
+        return friendsString;
+    }
 }

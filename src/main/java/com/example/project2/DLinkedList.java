@@ -81,5 +81,8 @@ public class DLinkedList<T extends Comparable<T>> {
         return "Head->" + s + "Head";
     }
 
+    public boolean isEmpty() {
+        return head.getNext() == head;
+    }
 
 }

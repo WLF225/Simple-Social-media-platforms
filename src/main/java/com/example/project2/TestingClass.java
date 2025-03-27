@@ -53,15 +53,15 @@ public class TestingClass extends Application {
             new Post(3,2,"dsadas","12.03.2020",list);
             new Post(4,2,"dsadas","12.03.2020",list);
 
-//        DNode<User> user = Main.userList.getHead().getNext();
-//            while (user != Main.userList.getHead()){
-//                user.getData().getPostsSharedWith().traverse();
-//                user = user.getNext();
-//            }
+        DNode<User> user = Main.userList.getHead().getNext();
+            while (user != Main.userList.getHead()){
+                user.getData().getPostsSharedWith().traverse();
+                user = user.getNext();
+            }
 
-            DNode<User> user2 = Main.getUserFromID(2);
-            user2.getData().getPosts().getHead().getNext().getData().getDate();
-            System.out.println(user2.getData().getPosts().getHead().getNext().getData().getDate());
+//            DNode<User> user2 = Main.getUserFromID(2);
+//            user2.getData().getPosts().getHead().getNext().getData().getDate();
+//            System.out.println(user2.getData().getPosts().getHead().getNext().getData().getDate());
 
 //
 //        DNode<User> user2 = Main.userList.getHead().getNext().getNext();
