@@ -3,33 +3,25 @@ package com.example.project2;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Spinner;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
 
-import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Locale;
+import java.io.File;
+
 
 public class MainMenu extends BorderPane {
-    LocalDate date;
 
     public MainMenu() {
-        Button[] buttons = {new Button("Read user file"), new Button("Read friendships file"),
-                new Button("Read posts file")};
-
-
-        DatePicker datePicker = new DatePicker();
-
+        Button[] buttons = {new Button("Read all the files")};
         styling(buttons,30);
 
-        setCenter(datePicker);
+        buttons[0].setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            File file = fileChooser.showOpenDialog(null);
 
-        datePicker.setOnAction(e -> {
-            System.out.println(datePicker.getValue());
         });
+
 
 
         HBox hbox = new HBox(30,buttons);
