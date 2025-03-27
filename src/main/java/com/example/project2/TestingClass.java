@@ -28,8 +28,7 @@ public class TestingClass extends Application {
 //        list.traverse();
 
         try {
-            LocalDate date = LocalDate.now();
-            System.out.println(date);
+
             Main.userList.insetSorted(new User(1,"Ibrahim",116));
             Main.userList.insetSorted(new User(2,"Ahmed",20));
             Main.userList.insetSorted(new User(3,"Khalid",20));
@@ -50,15 +49,20 @@ public class TestingClass extends Application {
 //            Main.postList.insetSorted(new Post(2,2,"dsadas","123",list));
 //            Main.postList.insetSorted(new Post(3,1,"dsadas","123",list));
 
-            new Post(2,2,"dsadas","2000.02.12",list);
-            new Post(3,2,"dsadas","2020.03.12",list);
-            new Post(4,2,"dsadas","2020.03.12",list);
+            new Post(2,2,"dsadas","12.13.2000",list);
+            new Post(3,2,"dsadas","12.03.2020",list);
+            new Post(4,2,"dsadas","12.03.2020",list);
 
-        DNode<User> user = Main.userList.getHead().getNext();
-            while (user != Main.userList.getHead()){
-                user.getData().getPostsSharedWith().traverse();
-                user = user.getNext();
-            }
+//        DNode<User> user = Main.userList.getHead().getNext();
+//            while (user != Main.userList.getHead()){
+//                user.getData().getPostsSharedWith().traverse();
+//                user = user.getNext();
+//            }
+
+            DNode<User> user2 = Main.getUserFromID(2);
+            user2.getData().getPosts().getHead().getNext().getData().getDate();
+            System.out.println(user2.getData().getPosts().getHead().getNext().getData().getDate());
+
 //
 //        DNode<User> user2 = Main.userList.getHead().getNext().getNext();
 //            user2.getData().getPosts().traverse();

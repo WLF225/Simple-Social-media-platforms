@@ -71,7 +71,7 @@ public class Post implements Comparable<Post> {
                 throw new AlertException("The program was invented in 2000.");
             if (System.currentTimeMillis() < gc.getTimeInMillis())
                 throw new AlertException("You cant put future time in this program.");
-            this.date = dateParts[0]+"."+dateParts[1]+"."+dateParts[2];
+            this.date = gc.get(Calendar.DAY_OF_MONTH)+"."+(gc.get(Calendar.MONTH)+1)+"."+gc.get(Calendar.YEAR);
         }else
             throw new AlertException("Wrong date format.");
 
