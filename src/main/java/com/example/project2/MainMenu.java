@@ -11,7 +11,7 @@ public class MainMenu extends BorderPane {
 
     public MainMenu(Stage stage) {
         Button[] buttons = {new Button("Read all the files"),new Button("Save to files"),
-                new Button("Delete post"),new Button("Delete friend")};
+                new Button("Delete post"),new Button("Delete friend"),new Button("Delete user")};
 
         TextField tf = new TextField();
 
@@ -23,6 +23,8 @@ public class MainMenu extends BorderPane {
 
         buttons[2].setOnAction(new DeletePost(1));
         buttons[3].setOnAction(new DeleteFriend(5,tf));
+
+        buttons[4].setOnAction(new DeleteUser(tf));
 
         HBox hbox = new HBox(30,buttons);
         hbox.setAlignment(Pos.CENTER);

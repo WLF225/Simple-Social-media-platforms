@@ -28,7 +28,7 @@ public class DeleteFriend implements EventHandler<ActionEvent> {
         deleteFriend(userID,friendID,true);
 
     }
-    public void deleteFriend(int userID, int friendID, boolean confirmation) {
+    public static void deleteFriend(int userID, int friendID, boolean confirmation) {
         DNode<User> user = Main.getUserFromID(userID);
         if (user == null){
             Alert alert = new Alert(Alert.AlertType.ERROR);

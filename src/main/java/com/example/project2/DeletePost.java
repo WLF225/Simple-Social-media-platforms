@@ -9,23 +9,21 @@ import javafx.scene.control.TextField;
 public class DeletePost implements EventHandler<ActionEvent> {
 
     TextField tf;
-    int id;
+    int postID;
 
     public DeletePost(TextField tf) {
         this.tf = tf;
     }
     public DeletePost(int id) {
-        this.id = id;
+        this.postID = id;
     }
 
     public void handle(ActionEvent event) {
-        int postID;
+
         if (tf != null)
              postID = Integer.parseInt(tf.getText());
-        else
-            postID = id;
 
-        deletePost(id,true);
+        deletePost(postID,true);
 
     }
     public void deletePost(int postID,boolean confirmation) {
