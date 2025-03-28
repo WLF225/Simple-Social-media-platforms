@@ -1,32 +1,33 @@
 package com.example.project2;
 
-
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
-import java.io.File;
-import java.util.Scanner;
-
 
 public class MainMenu extends BorderPane {
 
     public MainMenu(Stage stage) {
-        Button[] buttons = {new Button("Read all the files"),new Button("Save to files")};
+        Button[] buttons = {new Button("Read all the files"),new Button("Save to files"),
+                new Button("Delete post"),new Button("Delete friend")};
+
+        TextField tf = new TextField();
+
         styling(buttons,30);
 
         buttons[0].setOnAction(new ReadFiles());
 
         buttons[1].setOnAction(new SaveToFiles());
 
+        buttons[2].setOnAction(new DeletePost(1));
+        buttons[3].setOnAction(new DeleteFriend(5,tf));
+
         HBox hbox = new HBox(30,buttons);
         hbox.setAlignment(Pos.CENTER);
         setTop(hbox);
+        setCenter(tf);
 
     }
 

@@ -61,6 +61,22 @@ public class DLinkedList<T extends Comparable<T>> {
         }
     }
 
+    public DNode<T> delete(T data) {
+        DNode<T> curr = head.getNext();
+        while (curr != head && data.compareTo(curr.getData()) >= 0) {
+            if (curr.getData().compareTo(data) ==0) {
+                break;
+            }
+            curr = curr.getNext();
+        }
+        if (curr == head) {
+            return null;
+        }
+        curr.getNext().setPrev(curr.getPrev());
+        curr.getPrev().setNext(curr.getNext());
+        return curr;
+    }
+
     public void clear() {
         head.setNext(head);
         head.setPrev(head);

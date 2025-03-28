@@ -24,7 +24,7 @@ public class Main extends Application {
 
     public static DNode<User> getUserFromID(int id) {
         DNode<User> curr = userList.getHead().getNext();
-        while (curr != userList.getHead()){
+        while (curr != userList.getHead() && id >= curr.getData().getId()){
             if (curr.getData().getId() == id)
                 return curr;
             curr = curr.getNext();

@@ -3,8 +3,6 @@ package com.example.project2;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.time.LocalDate;
-import java.util.Date;
 
 public class TestingClass extends Application {
 
@@ -38,6 +36,16 @@ public class TestingClass extends Application {
             list.insetSorted(1);
             list.insetSorted(3);
 
+            System.out.println(Main.getUserFromID(1));
+            System.out.println(Main.getUserFromID(2));
+            System.out.println(Main.getUserFromID(3));
+
+            Main.userList.delete(Main.getUserFromID(3).getData());
+
+            System.out.println(Main.getUserFromID(1));
+            System.out.println(Main.getUserFromID(2));
+            System.out.println(Main.getUserFromID(3));
+
             DNode<User> user1 = Main.getUserFromID(2);
             user1.getData().addFriend(1);
 //            user.getData().addFriend(2);
@@ -49,7 +57,7 @@ public class TestingClass extends Application {
 //            Main.postList.insetSorted(new Post(2,2,"dsadas","123",list));
 //            Main.postList.insetSorted(new Post(3,1,"dsadas","123",list));
 
-            new Post(2,2,"dsadas","12.13.2000",list);
+            Post post1 = new Post(2,2,"dsadas","12.13.2000",list);
             new Post(3,2,"dsadas","12.03.2020",list);
             new Post(4,2,"dsadas","12.03.2020",list);
 
@@ -59,6 +67,14 @@ public class TestingClass extends Application {
                 user = user.getNext();
             }
 
+        user = Main.getUserFromID(2);
+            user.getData().getPosts().getHead().getNext().getData().setContent("HOHOHO");
+
+            user = Main.userList.getHead().getNext();
+            while (user != Main.userList.getHead()){
+                user.getData().getPostsSharedWith().traverse();
+                user = user.getNext();
+            }
 //            DNode<User> user2 = Main.getUserFromID(2);
 //            user2.getData().getPosts().getHead().getNext().getData().getDate();
 //            System.out.println(user2.getData().getPosts().getHead().getNext().getData().getDate());

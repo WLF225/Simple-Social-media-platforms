@@ -138,7 +138,7 @@ public class Post implements Comparable<Post> {
 
     @Override
     public String toString() {
-        return "ID: " + id + ", CreatorID: " + creatorID + ", Content: " + content + ", Date: " + date;
+        return "ID: " + id + ", CreatorID: " + creatorID + ", Content: " + content + ", Date: " + date+ "sharedTo: " + sharedToToString();
     }
 
     public String print(){

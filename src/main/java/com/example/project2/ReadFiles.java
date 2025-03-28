@@ -5,7 +5,6 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.FileChooser;
-
 import java.io.File;
 import java.util.Scanner;
 
