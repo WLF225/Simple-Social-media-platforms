@@ -88,13 +88,13 @@ public class ReadFiles implements EventHandler<ActionEvent> {
                 try {
                     String line = scanner.nextLine();
                     String[] parts = line.split(",");
-                    DNode<User> user = Main.getUserFromID(Integer.parseInt(parts[0]));
+                    User user = Main.getUserFromID(Integer.parseInt(parts[0]));
                     for (int i = 1; i < parts.length; i++) {
                         //This try is to make it read the next friend even if there is wrong friend in the line
                         try {
                             if (user == null)
                                 throw new AlertException("User you want to add friends for does not exist.");
-                            user.getData().addFriend(Integer.parseInt(parts[i]));
+                            user.addFriend(Integer.parseInt(parts[i]));
                         } catch (AlertException e1) {
                             //To not get the friend is already added warning
                             if (e1.getMessage().equals("The friend with id "+parts[i]+" already added."))

@@ -4,8 +4,10 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
+
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.Iterator;
 
 public class SaveToFiles implements EventHandler<ActionEvent> {
 
@@ -41,21 +43,21 @@ public class SaveToFiles implements EventHandler<ActionEvent> {
             PrintWriter userPR = new PrintWriter(userFile);
             PrintWriter friendsPR = new PrintWriter(friendsFile);
             PrintWriter postsFR = new PrintWriter(postsFile);
-            DNode<User> currUser = Main.userList.getHead().getNext();
+
+            Iterator<User> currUser = Main.userList.iterator();
 
             //To print the users
-            while (currUser != Main.userList.getHead()) {
-                userPR.println(currUser.getData().print());
-                DNode<Post> currPost = currUser.getData().getPosts().getHead().getNext();
+            while (currUser.hasNext()) {
+                User user = currUser.next();
+                userPR.println(user.print());
+                Iterator<Post> currPost = user.getPosts().iterator();
                 //To print friends
-                if (!currUser.getData().getFriends().isEmpty())
-                    friendsPR.println(currUser.getData().printFriends());
+                if (!user.getFriends().isEmpty())
+                    friendsPR.println(user.printFriends());
                 //To print the posts
-                while (currPost != currUser.getData().getPosts().getHead()){
-                    postsFR.println(currPost.getData().print());
-                    currPost = currPost.getNext();
+                while (currPost.hasNext()){
+                    postsFR.println(currPost.next().print());
                 }
-                currUser = currUser.getNext();
             }
             userPR.close();
             friendsPR.close();

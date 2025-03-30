@@ -6,6 +6,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 
+import java.util.Iterator;
+
 public class DeleteUser implements EventHandler<ActionEvent> {
 
     TextField tF;
@@ -27,9 +29,9 @@ public class DeleteUser implements EventHandler<ActionEvent> {
 
     }
 
-    public void deleteUser(int id, boolean confirmation) {
+    public static void deleteUser(int id, boolean confirmation) {
 
-        DNode<User> user = Main.getUserFromID(id);
+        User user = Main.getUserFromID(id);
         if (user == null) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
@@ -51,14 +53,14 @@ public class DeleteUser implements EventHandler<ActionEvent> {
         if (ok) {
 
             //To delete all his friends and posts from and to them
-            DNode<User> curr = user.getData().getFriends().getHead().getNext();
-            while (curr != user.getData().getFriends().getHead()){
-                DeleteFriend.deleteFriend(id,curr.getData().getId(),false);
-                curr = curr.getNext();
-            }
+
+            Iterator<User> iterator = user.getFriends().iterator();
+
+            while (iterator.hasNext())
+                DeleteFriend.deleteFriend(id,iterator.next().getId(),false);
 
             //To delete the user from the list
-            Main.userList.delete(user.getData());
+            Main.userList.delete(user);
 
         }
 

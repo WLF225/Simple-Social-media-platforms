@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 public class Main extends Application {
 
@@ -22,12 +23,13 @@ public class Main extends Application {
         launch();
     }
 
-    public static DNode<User> getUserFromID(int id) {
-        DNode<User> curr = userList.getHead().getNext();
-        while (curr != userList.getHead() && id >= curr.getData().getId()){
-            if (curr.getData().getId() == id)
-                return curr;
-            curr = curr.getNext();
+    public static User getUserFromID(int id) {
+        Iterator<User> it = userList.iterator();
+        while (it.hasNext()) {
+            User user = it.next();
+            if (user.getId() == id) {
+                return user;
+            }
         }
         return null;
     }

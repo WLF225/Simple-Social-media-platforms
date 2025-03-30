@@ -1,5 +1,7 @@
 package com.example.project2;
 
+import java.util.Iterator;
+
 public class User implements Comparable<User> {
 
     private int id;
@@ -79,20 +81,18 @@ public class User implements Comparable<User> {
 
     //To make sure the id does not exist
     public void duplicatedID(int id) {
-        DLinkedList<User> list = Main.userList;
-        DNode<User> curr = list.getHead().getNext();
+        Iterator<User> iterator = Main.userList.iterator();
 
-        while (curr != list.getHead() && curr.getData().getId() <= id) {
-            if (curr.getData().id == id)
+        while (iterator.hasNext()) {
+            if (iterator.next().id == id)
                 throw new AlertException("This ID already exists.");
-            curr = curr.getNext();
         }
     }
 
-    //To sort the users according to their id
+    //To sort the users according to their name
     @Override
     public int compareTo(User o) {
-        return id - o.id;
+        return name.compareTo(o.name);
     }
 
     @Override
@@ -104,24 +104,25 @@ public class User implements Comparable<User> {
         if (id == this.id)
             throw new AlertException("The user cannot add himself.");
 
-        DNode<User> friend = Main.getUserFromID(id);
+        User friend = Main.getUserFromID(id);
         if (friend == null)
             throw new AlertException("The user with id "+id+" does not exist.");
-        DNode<User> exists = getFriendFromId(id);
+        User exists = getFriendFromId(id);
         if (exists != null)
             throw new AlertException("The friend with id "+id+" already added.");
-        friends.insetSorted(friend.getData());
-        friend.getData().getFriends().insetSorted(this);
+        friends.insetSorted(friend);
+        friend.getFriends().insetSorted(this);
     }
 
-    public DNode<User> getFriendFromId(int id) {
+    public User getFriendFromId(int id) {
         if (friends.isEmpty())
             return null;
-        DNode<User> curr = friends.getHead().getNext();
-        while (curr != friends.getHead()){
-            if (curr.getData().getId() == id)
-                return curr;
-            curr = curr.getNext();
+        Iterator<User> it = friends.iterator();
+        while (it.hasNext()) {
+            User user = it.next();
+            if (user.getId() == id) {
+                return user;
+            }
         }
         return null;
     }
@@ -132,11 +133,18 @@ public class User implements Comparable<User> {
 
     public String printFriends(){
         String friendsString = id+"";
-        DNode<User> curr = friends.getHead().getNext();
-        while (curr != friends.getHead()) {
-            friendsString += ","+curr.getData().getId();
-            curr = curr.getNext();
+        Iterator<User> curr = friends.iterator();
+        while (curr.hasNext()) {
+            friendsString += ","+curr.next().getId();
         }
         return friendsString;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof User) {
+            return id == ((User) o).id;
+        }
+        return false;
     }
 }

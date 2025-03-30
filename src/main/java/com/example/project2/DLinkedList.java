@@ -1,6 +1,8 @@
 package com.example.project2;
 
-public class DLinkedList<T extends Comparable<T>> {
+import java.util.Iterator;
+
+public class DLinkedList<T extends Comparable<T>> implements Iterable<T> {
 
     private DNode<T> head;
 
@@ -9,10 +11,6 @@ public class DLinkedList<T extends Comparable<T>> {
         head = dummy;
         head.setNext(head);
         head.setPrev(head);
-    }
-
-    public DNode<T> getHead() {
-        return head;
     }
 
     public void insetSorted(T data) {
@@ -64,7 +62,7 @@ public class DLinkedList<T extends Comparable<T>> {
     public DNode<T> delete(T data) {
         DNode<T> curr = head.getNext();
         while (curr != head && data.compareTo(curr.getData()) >= 0) {
-            if (curr.getData().compareTo(data) ==0) {
+            if (curr.getData().equals(data)) {
                 break;
             }
             curr = curr.getNext();
@@ -101,4 +99,18 @@ public class DLinkedList<T extends Comparable<T>> {
         return head.getNext() == head;
     }
 
+    @Override
+    public Iterator<T> iterator() {
+        return new ListIterator();
+    }
+
+    private class ListIterator implements Iterator<T> {
+        private DNode<T> curr = head.getNext();
+        public boolean hasNext() {return curr != head;}
+        public T next() {
+            T t = curr.getData();
+            curr = curr.getNext();
+            return t;
+        }
+    }
 }

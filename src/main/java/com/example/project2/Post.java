@@ -2,6 +2,7 @@ package com.example.project2;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 
 public class Post implements Comparable<Post> {
 
@@ -18,14 +19,13 @@ public class Post implements Comparable<Post> {
         setDate(date);
         setSharedTo(sharedTo);
         //To add the post created to the user
-        DNode<User> user = Main.getUserFromID(creatorID);
-        user.getData().getPosts().insetSorted(this);
+        User user = Main.getUserFromID(creatorID);
+        user.getPosts().insetSorted(this);
         //To add it tho friends shared with
-        DNode<Integer> currInt = sharedTo.getHead().getNext();
-        while (currInt != sharedTo.getHead()) {
-            DNode<User> friend = Main.getUserFromID(currInt.getData());
-            friend.getData().getPostsSharedWith().insetSorted(this);
-            currInt = currInt.getNext();
+        Iterator<Integer> iterator = sharedTo.iterator();
+        while (iterator.hasNext()) {
+            User friend = Main.getUserFromID(iterator.next());
+            friend.getPostsSharedWith().insetSorted(this);
         }
     }
 
@@ -48,7 +48,7 @@ public class Post implements Comparable<Post> {
         if (creatorID < 0)
             throw new AlertException("post creatorID cannot be negative.");
         //To make sure the user with that id exists
-        DNode<User> user = Main.getUserFromID(creatorID);
+        User user = Main.getUserFromID(creatorID);
         if (user == null)
             throw new AlertException("This user does not exist.");
 
@@ -91,41 +91,37 @@ public class Post implements Comparable<Post> {
     }
 
     public String sharedToToString() {
-        DNode<Integer> curr = sharedTo.getHead();
+        Iterator<Integer> curr = sharedTo.iterator();
             String sharedToString = "";
-            while (curr.getNext() != sharedTo.getHead()) {
-                curr = curr.getNext();
-                sharedToString += ","+curr.getData();
+            while (curr.hasNext()) {
+                sharedToString += ","+curr.next();
             }
             return sharedToString;
     }
 
     public void setSharedTo(DLinkedList<Integer> sharedTo) {
         sharedTo.removeDuplicates();
-        DNode<Integer> currInt = sharedTo.getHead().getNext();
-        DNode<User> creator = Main.getUserFromID(creatorID);
+        Iterator<Integer> currInt = sharedTo.iterator();
+        User creator = Main.getUserFromID(creatorID);
         //To make sure the person he want  to share the post with is his friend
-        while (currInt != sharedTo.getHead()) {
-            DNode<User> friend = creator.getData().getFriendFromId(currInt.getData());
+        while (currInt.hasNext()) {
+            User friend = creator.getFriendFromId(currInt.next());
             if (friend == null)
                 throw new AlertException("This user can only share to his friends.");
-
-            currInt = currInt.getNext();
         }
         this.sharedTo = sharedTo;
     }
     //To make sure the id does not exist
     public void duplicateID(int id){
-        DNode<User> curr = Main.userList.getHead().getNext();
-        while (curr != Main.userList.getHead()) {
-            DNode<Post> pL = curr.getData().getPosts().getHead().getNext();
-            while (pL != curr.getData().getPosts().getHead()) {
-                if (pL.getData().getId() == id) {
+        Iterator<User> curr = Main.userList.iterator();
+        while (curr.hasNext()) {
+            User user = curr.next();
+            Iterator<Post> currPost = user.getPosts().iterator();
+            while (currPost.hasNext()) {
+                if (currPost.next().getId() == id) {
                     throw new AlertException("Duplicate post ID.");
                 }
-                pL = pL.getNext();
             }
-            curr = curr.getNext();
         }
     }
 
@@ -143,6 +139,14 @@ public class Post implements Comparable<Post> {
 
     public String print(){
         return id + "," + creatorID + "," + content + "," + date + sharedToToString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Post) {
+            return id == ((Post) o).id;
+        }
+        return false;
     }
 
 

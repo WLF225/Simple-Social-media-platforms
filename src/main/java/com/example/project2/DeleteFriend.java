@@ -6,6 +6,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 
+import java.util.Iterator;
+
 public class DeleteFriend implements EventHandler<ActionEvent> {
 
     TextField tf;
@@ -29,7 +31,7 @@ public class DeleteFriend implements EventHandler<ActionEvent> {
 
     }
     public static void deleteFriend(int userID, int friendID, boolean confirmation) {
-        DNode<User> user = Main.getUserFromID(userID);
+        User user = Main.getUserFromID(userID);
         if (user == null){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
@@ -38,12 +40,12 @@ public class DeleteFriend implements EventHandler<ActionEvent> {
             alert.showAndWait();
             return;
         }
-        DNode<User> friend = user.getData().getFriendFromId(friendID);
+        User friend = user.getFriendFromId(friendID);
         if (friend == null){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setHeaderText(null);
-            alert.setContentText("User "+user.getData().getId() +" doesn't have friend with id "+friendID+".");
+            alert.setContentText("User "+user.getId() +" doesn't have friend with id "+friendID+".");
             alert.showAndWait();
             return;
         }
@@ -57,36 +59,34 @@ public class DeleteFriend implements EventHandler<ActionEvent> {
         }
         if (ok) {
             //To remove user id from shared to list in friend posts
-            DNode<Post> currPost = friend.getData().getPosts().getHead().getNext();
-            while (currPost != friend.getData().getPosts().getHead()) {
-                currPost.getData().getSharedTo().delete(userID);
-                currPost = currPost.getNext();
+            Iterator<Post> currPost = friend.getPosts().iterator();
+            while (currPost.hasNext()) {
+                currPost.next().getSharedTo().delete(userID);
             }
             //To remove posts created by user from friend shared with list
-            currPost = friend.getData().getPostsSharedWith().getHead().getNext();
-            while (currPost != friend.getData().getPostsSharedWith().getHead()) {
-                if (currPost.getData().getCreatorID() == userID) {
-                    friend.getData().getPostsSharedWith().delete(currPost.getData());
+            currPost = friend.getPostsSharedWith().iterator();
+            while (currPost.hasNext()) {
+                Post post = currPost.next();
+                if (post.getCreatorID() == userID) {
+                    friend.getPostsSharedWith().delete(post);
                 }
-                currPost = currPost.getNext();
             }
             //To remove friend id from shared to list in user posts
-            currPost = user.getData().getPosts().getHead().getNext();
-            while (currPost != user.getData().getPosts().getHead()) {
-                currPost.getData().getSharedTo().delete(userID);
-                currPost = currPost.getNext();
+            currPost = user.getPosts().iterator();
+            while (currPost.hasNext()) {
+                currPost.next().getSharedTo().delete(userID);
             }
             //To remove posts created by friend from user shared with list
-            currPost = user.getData().getPostsSharedWith().getHead().getNext();
-            while (currPost != user.getData().getPostsSharedWith().getHead()) {
-                if (currPost.getData().getCreatorID() == friendID) {
-                    user.getData().getPostsSharedWith().delete(currPost.getData());
+            currPost = user.getPostsSharedWith().iterator();
+            while (currPost.hasNext()) {
+                Post post = currPost.next();
+                if (post.getCreatorID() == friendID) {
+                    user.getPostsSharedWith().delete(post);
                 }
-                currPost = currPost.getNext();
             }
             //To delete them from each others friend list
-            friend.getData().getFriends().delete(user.getData());
-            user.getData().getFriends().delete(friend.getData());
+            friend.getFriends().delete(user);
+            user.getFriends().delete(friend);
         }
     }
 }
