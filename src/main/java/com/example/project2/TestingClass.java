@@ -60,29 +60,35 @@ public class TestingClass extends Application {
 //            Main.postList.insetSorted(new Post(2,2,"dsadas","123",list));
 //            Main.postList.insetSorted(new Post(3,1,"dsadas","123",list));
 
-        Post post1 = new Post(2, 2, "dsadas", "12.13.2000", list);
+        Post post1 = new Post(2, 2, "dsadas", "12-1-2000", list);
         new Post(3, 2, "dsadas", "12.03.2020", list);
-        new Post(4, 2, "dsadas", "12.03.2020", list);
+        new Post(4, 2, "dsadas", "12.4.2020", list);
 
 
-        User user3 = Main.getUserFromID(3);
-        Iterator<User> iterable = Main.userList.iterator();
+        User user3 = Main.getUserFromID(2);
 
-        while (iterable.hasNext()) {
-            User user = iterable.next();
-            System.out.println(user.print());
-            user.getPostsSharedWith().traverse();
-        }
 
-        DeleteUser.deleteUser(2,false);
-
-        iterable = Main.userList.iterator();
+        Iterator<Post> iterable = user3.getPosts().iterator();
 
         while (iterable.hasNext()) {
-            User user = iterable.next();
-            System.out.println(user.print());
-            user.getPostsSharedWith().traverse();
+            System.out.println(iterable.next().print());
         }
+//
+//        while (iterable.hasNext()) {
+//            User user = iterable.next();
+//            System.out.println(user.print());
+//            user.getPostsSharedWith().traverse();
+//        }
+//
+//        DeleteUser.deleteUser(2,false);
+//
+//        iterable = Main.userList.iterator();
+//
+//        while (iterable.hasNext()) {
+//            User user = iterable.next();
+//            System.out.println(user.print());
+//            user.getPostsSharedWith().traverse();
+//        }
 
 //        DNode<User> user = Main.userList.getHead().getNext();
 //            while (user != Main.userList.getHead()){

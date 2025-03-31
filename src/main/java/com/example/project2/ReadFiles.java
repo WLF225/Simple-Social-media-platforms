@@ -51,6 +51,8 @@ public class ReadFiles implements EventHandler<ActionEvent> {
                         throw new NumberFormatException();
                     }
                     Main.userList.insetSorted(new User(Integer.parseInt(parts[0]),parts[1],Integer.parseInt(parts[2])));
+                    if (CreateNewUser.userID <= Integer.parseInt(parts[0]))
+                        CreateNewUser.userID = Integer.parseInt(parts[0])+1;
                 }catch (AlertException e1){
                     if (cond) {
                         Alert alertE = new Alert(Alert.AlertType.ERROR);

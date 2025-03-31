@@ -1,35 +1,87 @@
 package com.example.project2;
 
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class MainMenu extends BorderPane {
 
     public MainMenu(Stage stage) {
-        Button[] buttons = {new Button("Read all the files"),new Button("Save to files"),
-                new Button("Delete post"),new Button("Delete friend"),new Button("Delete user")};
+        stage.setTitle("Main Menu");
 
-        TextField tf = new TextField();
+        Button[] buttons = {new Button("Enter as a user"), new Button("Enter as an administrator"),
+                new Button("Read all the files"), new Button("Save to files")};
 
-        styling(buttons,30);
 
-        buttons[0].setOnAction(new ReadFiles());
+        styling(buttons, 30);
 
-        buttons[1].setOnAction(new SaveToFiles());
+        buttons[0].setOnAction(e -> {
+            boolean cond = true;
+            if (Main.userList.isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation");
+                alert.setHeaderText(null);
+                alert.setContentText("Are you sure you want to enter without reading files ?, " +
+                        "you can only create new account and it may have wrong ID");
+                cond = alert.showAndWait().get().equals(ButtonType.OK);
+            }
+            if (cond) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Join as a user");
+                alert.setHeaderText(null);
+                alert.setContentText("How you want to join ?");
+                ButtonType logeInBT = new ButtonType("loge in");
+                ButtonType signUpBT = new ButtonType("Sign up");
+                alert.getButtonTypes().setAll(logeInBT, signUpBT, ButtonType.CANCEL);
 
-        buttons[2].setOnAction(new DeletePost(1));
-        buttons[3].setOnAction(new DeleteFriend(5,tf));
+                ButtonType bT = alert.showAndWait().get();
+                if (bT == ButtonType.CANCEL) {
+                    return;
+                }
+                cond = bT == logeInBT;
+                if (cond) {
+                    if (Main.userList.isEmpty()) {
+                        Alert alert1 = new Alert(Alert.AlertType.ERROR);
+                        alert1.setTitle("Error");
+                        alert1.setHeaderText(null);
+                        alert1.setContentText("You can't enter without reading files or create new account.");
+                        alert1.showAndWait();
+                        return;
+                    }
+                    Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert1.setTitle("Confirmation");
+                    alert1.setHeaderText("Enter The ID for your user");
+                    TextField idTF = new TextField();
+                    idTF.setPromptText("Enter The ID");
+                    alert1.getDialogPane().setContent(new Pane(idTF));
+                    alert1.showAndWait();
+                    System.out.println(idTF.getText());
+                } else {
+                    stage.setScene(new Scene(new CreateNewUser(stage, this)));
+                }
+            }
+        });
 
-        buttons[4].setOnAction(new DeleteUser(tf));
+        buttons[2].setOnAction(new ReadFiles());
 
-        HBox hbox = new HBox(30,buttons);
-        hbox.setAlignment(Pos.CENTER);
-        setTop(hbox);
-        setCenter(tf);
+        buttons[3].setOnAction(new SaveToFiles());
+
+
+        VBox vbox = new VBox(30, buttons[0], buttons[1]);
+        HBox hbox = new HBox(30, buttons[2], buttons[3]);
+        hbox.setAlignment(Pos.TOP_RIGHT);
+
+        setLeft(vbox);
+        setBottom(hbox);
+
 
     }
 

@@ -1,15 +1,17 @@
 package com.example.project2;
 
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
+import java.util.regex.Pattern;
 
 public class Post implements Comparable<Post> {
 
     private int id;
     private int creatorID;
     private String content;
-    private String date;
+    private GregorianCalendar date;
     private DLinkedList<Integer> sharedTo;
 
     public Post(int id, int creatorID, String content, String date, DLinkedList<Integer> sharedTo) {
@@ -63,26 +65,36 @@ public class Post implements Comparable<Post> {
         this.content = content;
     }
 
-    public String getDate() {
+    public GregorianCalendar getDate() {
         return date;
     }
 
-    public void setDate(String date) {
-        if (date.matches("\\d{1,2}.\\d{1,2}.\\d{4}")) {
+    public String dateToString() {
+        return date.get(Calendar.DAY_OF_MONTH)+"."+ (date.get(Calendar.MONTH)+1)+"."+date.get(Calendar.YEAR);
+    }
 
-            String[] dateParts = date.split("\\.");
-            int[] dateInt = new int[3];
-            for (int i = 0; i < dateParts.length; i++) {
-                dateInt[i] = Integer.parseInt(dateParts[i]);
-            }
-            GregorianCalendar gc = new GregorianCalendar(dateInt[2], dateInt[1]-1, dateInt[0]);
-            if (gc.get(Calendar.YEAR) < 2000)
-                throw new AlertException("The program was invented in 2000.");
-            if (System.currentTimeMillis() < gc.getTimeInMillis())
-                throw new AlertException("You cant put future time in this program.");
-            this.date = gc.get(Calendar.DAY_OF_MONTH)+"."+(gc.get(Calendar.MONTH)+1)+"."+gc.get(Calendar.YEAR);
-        }else
+    public void setDate(String date) {
+        String[] dateParts;
+        if (date.matches("\\d{1,2}\\.\\d{1,2}\\.\\d{4}")) {
+            dateParts = date.split("\\.");
+        } else if (date.matches("\\d{1,2}-\\d{1,2}-\\d{4}")) {
+            dateParts = date.split("-");
+        } else
             throw new AlertException("Wrong date format.");
+
+
+
+        int[] dateInt = new int[3];
+        for (int i = 0; i < dateParts.length; i++) {
+            dateInt[i] = Integer.parseInt(dateParts[i]);
+        }
+        GregorianCalendar gc = new GregorianCalendar(dateInt[2], dateInt[1] - 1, dateInt[0]);
+        if (gc.get(Calendar.YEAR) < 2000)
+            throw new AlertException("The program was invented in 2000.");
+        if (System.currentTimeMillis() < gc.getTimeInMillis())
+            throw new AlertException("You cant put future time in this program.");
+        this.date = gc;
+
 
     }
 
@@ -92,11 +104,11 @@ public class Post implements Comparable<Post> {
 
     public String sharedToToString() {
         Iterator<Integer> curr = sharedTo.iterator();
-            String sharedToString = "";
-            while (curr.hasNext()) {
-                sharedToString += ","+curr.next();
-            }
-            return sharedToString;
+        String sharedToString = "";
+        while (curr.hasNext()) {
+            sharedToString += "," + curr.next();
+        }
+        return sharedToString;
     }
 
     public void setSharedTo(DLinkedList<Integer> sharedTo) {
@@ -111,8 +123,9 @@ public class Post implements Comparable<Post> {
         }
         this.sharedTo = sharedTo;
     }
+
     //To make sure the id does not exist
-    public void duplicateID(int id){
+    public void duplicateID(int id) {
         Iterator<User> curr = Main.userList.iterator();
         while (curr.hasNext()) {
             User user = curr.next();
@@ -126,19 +139,20 @@ public class Post implements Comparable<Post> {
     }
 
 
-    //To sort the post according to the id
+    //To sort the posts making the newest first
     @Override
     public int compareTo(Post o) {
-        return id - o.id;
+        return o.date.compareTo(this.date);
     }
 
     @Override
     public String toString() {
-        return "ID: " + id + ", CreatorID: " + creatorID + ", Content: " + content + ", Date: " + date+ "sharedTo: " + sharedToToString();
+        return "ID: " + id + ", CreatorID: " + creatorID + ", Content: " + content + ", Date: " + dateToString() + ", sharedTo: " + sharedToToString();
     }
 
-    public String print(){
-        return id + "," + creatorID + "," + content + "," + date + sharedToToString();
+    public String print() {
+        return id + "," + creatorID + "," + content + ","
+                + dateToString() + sharedToToString();
     }
 
     @Override
