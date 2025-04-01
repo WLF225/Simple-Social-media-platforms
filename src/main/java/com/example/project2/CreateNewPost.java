@@ -98,10 +98,12 @@ public class CreateNewPost extends Pane {
                 }
 
                 DLinkedList<Integer> sharedWithList = new DLinkedList<>();
-                String[] sharedWithParts = sharedWith.split(",");
+                if (!sharedWithList.isEmpty()) {
+                    String[] sharedWithParts = sharedWith.split(",");
 
-                for (String sharedWithPart : sharedWithParts) {
-                    sharedWithList.insetSorted(Integer.parseInt(sharedWithPart));
+                    for (String sharedWithPart : sharedWithParts) {
+                        sharedWithList.insetSorted(Integer.parseInt(sharedWithPart));
+                    }
                 }
                 new Post(Integer.parseInt(textFields[0].getText()),Integer.parseInt(textFields[1].getText()),
                         textFields[2].getText(),datePicker.getValue().toString(),sharedWithList);
@@ -119,10 +121,11 @@ public class CreateNewPost extends Pane {
             }catch (AlertException e){
                 errorAlert.setContentText(e.getMessage());
                 errorAlert.showAndWait();
-            }catch (NumberFormatException e1){
-                errorAlert.setContentText("Please enter a valid shared with format");
-                errorAlert.showAndWait();
             }
+//            catch (NumberFormatException e1){
+//                errorAlert.setContentText("Please enter a valid shared with format");
+//                errorAlert.showAndWait();
+//            }
 
         });
 

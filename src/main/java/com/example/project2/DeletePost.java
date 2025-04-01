@@ -54,13 +54,12 @@ public class DeletePost implements EventHandler<ActionEvent> {
         }
 
         if (confirmation) {
-            boolean ok = true;
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Confirmation");
             alert.setHeaderText(null);
             alert.setContentText("Are you sure you want to delete the post with id " + postID + " ?");
-            ok = alert.showAndWait().get() == ButtonType.OK;
-            if (!ok)
+
+            if (alert.showAndWait().get() != ButtonType.OK)
                 throw new AlertException("The post deleted cancelled");
         }
 

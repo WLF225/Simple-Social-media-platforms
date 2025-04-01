@@ -18,12 +18,12 @@ public class FriendManagement extends BorderPane {
 
         stage.setTitle("Friend Management for "+user.getName()+" User");
 
-        Button[] buttons = {new Button("Search for a friend by his name"),new Button("Add Friend by his ID"),
-                new Button("Remove Friend by his ID"), new Button("Back")};
+        Button[] buttons = {new Button("Search for a friend by his name") ,new Button("Search for friend by his ID"),
+                new Button("Add Friend by his ID"), new Button("View friend from ID"), new Button("Back")};
 
         TextField textField = new TextField();
 
-        MainMenu.styling(buttons,40);
+        MainMenu.styling(buttons,30);
 
         textField.setFont(Font.font(30));
         textField.setPromptText("Enter Friend ID or Name");
@@ -54,6 +54,7 @@ public class FriendManagement extends BorderPane {
         setCenter(tableView);
 
         buttons[0].setTooltip(new Tooltip("Search for an empty text field to return to the normal table"));
+        buttons[1].setTooltip(new Tooltip("Search for an empty text field to return to the normal table"));
 
         buttons[0].setOnAction(event -> {
             ObservableList<User> searchList = FXCollections.observableArrayList();
@@ -85,7 +86,41 @@ public class FriendManagement extends BorderPane {
             tableView.setItems(searchList);
         });
 
-        buttons[1].setOnAction(e -> {
+        buttons[1].setOnAction(event -> {
+
+            if (textField.getText().isEmpty()) {
+                tableView.setItems(friendsList);
+                return;
+            }
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            try {
+                ObservableList<User> searchList = FXCollections.observableArrayList();
+                int id = Integer.parseInt(textField.getText());
+
+                boolean cond = false;
+
+                for (User friend : user.getFriends()) {
+                    if (friend.getId() == id) {
+                        searchList.add(friend);
+                        cond = true;
+                        break;
+                    }
+                }
+                if (!cond) {
+                    alert.setContentText("You don't have friends with this ID");
+                    alert.showAndWait();
+                    return;
+                }
+                tableView.setItems(searchList);
+            }catch (NumberFormatException e){
+                alert.setContentText("Enter a valid ID");
+                alert.showAndWait();
+            }
+        });
+
+        buttons[2].setOnAction(e -> {
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setTitle("Error");
             errorAlert.setHeaderText(null);
@@ -107,37 +142,35 @@ public class FriendManagement extends BorderPane {
             }
         });
 
-        buttons[2].setOnAction(e -> {
+        buttons[3].setOnAction(e -> {
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
             errorAlert.setTitle("Error");
             errorAlert.setHeaderText(null);
             try {
                 int id = Integer.parseInt(textField.getText());
-                new DeleteFriend(user.getId(),id,true).handle(null);
-                friendsList.remove(Main.getUserFromID(id));
-                Alert informationAlert = new Alert(Alert.AlertType.INFORMATION);
-                informationAlert.setTitle("Success");
-                informationAlert.setHeaderText(null);
-                informationAlert.setContentText("Friend removed successfully");
-                informationAlert.showAndWait();
-            }catch (NumberFormatException ex) {
-                errorAlert.setContentText("Please enter a valid friend ID");
-                errorAlert.showAndWait();
+                User friend = user.getFriendFromId(id);
+                if (friend == null)
+                    throw new AlertException("Friend not found");
+                stage.setScene(new Scene(new ViewFriends(stage,user,id)));
             }catch (AlertException ex1){
                 errorAlert.setContentText(ex1.getMessage());
                 errorAlert.showAndWait();
+            }catch (NumberFormatException ex2){
+                errorAlert.setContentText("Enter a valid friend ID");
+                errorAlert.showAndWait();
             }
+
         });
 
-        buttons[3].setOnAction(e -> stage.setScene(new Scene(new UserMenu(stage,user))));
+        buttons[4].setOnAction(e -> stage.setScene(new Scene(new UserMenu(stage,user))));
 
-        HBox hBox = new HBox(30,buttons[0],buttons[1],buttons[2]);
+        HBox hBox = new HBox(30,buttons[0],buttons[1],buttons[2],buttons[3]);
         VBox vbox = new VBox(30, textField, hBox);
 
         setTop(vbox);
 
-        setBottom(buttons[3]);
-        BorderPane.setAlignment(buttons[3], Pos.BOTTOM_RIGHT);
+        setBottom(buttons[4]);
+        BorderPane.setAlignment(buttons[4], Pos.BOTTOM_RIGHT);
 
     }
 }

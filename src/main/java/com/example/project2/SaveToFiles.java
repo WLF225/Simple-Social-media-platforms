@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ListIterator;
 
@@ -12,7 +13,7 @@ public class SaveToFiles implements EventHandler<ActionEvent> {
 
     public void handle(ActionEvent event) {
         //This try is to make sure the user read all the 3 files
-        try {
+
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("INFORMATION");
             alert.setHeaderText(null);
@@ -38,10 +39,9 @@ public class SaveToFiles implements EventHandler<ActionEvent> {
             if (postsFile == null) {
                 throw new AlertException("Posts file not found.");
             }
-
-            PrintWriter userPR = new PrintWriter(userFile);
-            PrintWriter friendsPR = new PrintWriter(friendsFile);
-            PrintWriter postsFR = new PrintWriter(postsFile);
+        try (PrintWriter userPR = new PrintWriter(userFile);
+             PrintWriter friendsPR = new PrintWriter(friendsFile);
+             PrintWriter postsFR = new PrintWriter(postsFile);){
 
             ListIterator<User> currUser = Main.userList.iterator();
 
@@ -54,19 +54,13 @@ public class SaveToFiles implements EventHandler<ActionEvent> {
                 if (!user.getFriends().isEmpty())
                     friendsPR.println(user.printFriends());
                 //To print the posts
-                while (currPost.hasNext()){
+                while (currPost.hasNext()) {
                     postsFR.println(currPost.next().print());
                 }
             }
-            userPR.close();
-            friendsPR.close();
-            postsFR.close();
-        }catch (Exception ex){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText(null);
-            alert.setContentText(ex.getMessage());
-            alert.showAndWait();
+        }catch (IOException e) {
+
         }
+
     }
 }

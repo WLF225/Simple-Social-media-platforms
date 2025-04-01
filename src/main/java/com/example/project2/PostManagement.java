@@ -13,15 +13,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.util.regex.Pattern;
-
 public class PostManagement extends BorderPane {
 
     public PostManagement(Stage stage, User user) {
 
         stage.setTitle("Post Management for " + user.getName());
 
-        Button[] buttons = {new Button("Search for a post by its content"),new Button("Delete a post by its ID"),
+        Button[] buttons = {new Button("Search for a post by its content"),new Button("View post by its ID"),
                 new Button("Create new post"), new Button("Back")};
 
         TextField textField = new TextField();
@@ -57,7 +55,9 @@ public class PostManagement extends BorderPane {
         postDateTC.setMinWidth(300);
 
         TableColumn<Post, String> sharedToTC = new TableColumn<>("Shared To");
-        sharedToTC.setCellValueFactory(e -> new SimpleStringProperty(e.getValue().sharedToToString()));
+        sharedToTC.setCellValueFactory(e ->
+                new SimpleStringProperty(e.getValue().sharedToToString().replaceFirst(",","")));
+
         sharedToTC.setStyle("-fx-font-size: 34px;-fx-alignment: CENTER;");
         sharedToTC.setMinWidth(500);
 
@@ -97,35 +97,24 @@ public class PostManagement extends BorderPane {
             errorAlert.setTitle("Error");
             errorAlert.setHeaderText(null);
             try {
-            int id = Integer.parseInt(textField.getText());
-
-            boolean cond = false;
-            Post post = null;
-            //To make sure the user have the post
-            for (Post curr : user.getPosts()) {
-                if (curr.getId() == id) {
-                    cond = true;
-                    post = curr;
-                    break;
+                int postID = Integer.parseInt(textField.getText());
+                boolean cond = false;
+                //To make sure the user have the post with this id
+                for (Post currPost : postsList) {
+                    if (postID == currPost.getId()) {
+                        cond = true;
+                        break;
+                    }
                 }
-            }
-            if (cond) {
-                new DeletePost(id,true).handle(null);
-                postsList.remove(post);
-                Alert informationAlert = new Alert(Alert.AlertType.INFORMATION);
-                informationAlert.setTitle("Success");
-                informationAlert.setHeaderText(null);
-                informationAlert.setContentText("Successfully deleted post");
-                informationAlert.showAndWait();
-            } else {
-                errorAlert.setContentText("You can't delete other users posts");
-                errorAlert.showAndWait();
-            }
-            }catch (AlertException ex) {
-                errorAlert.setContentText(ex.getMessage());
-                errorAlert.showAndWait();
-            }catch (NumberFormatException ex) {
-                errorAlert.setContentText("Please enter a valid ID");
+                if (cond) {
+                    stage.setScene(new Scene(new ViewPost(stage,user,postID)));
+                }else {
+                    errorAlert.setContentText("Post ID does not match any post of yours");
+                    errorAlert.showAndWait();
+                }
+
+            }catch (NumberFormatException e1) {
+                errorAlert.setContentText("Please enter a valid post ID");
                 errorAlert.showAndWait();
             }
         });
