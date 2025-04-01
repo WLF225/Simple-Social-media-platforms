@@ -3,7 +3,7 @@ package com.example.project2;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.util.Iterator;
+import java.util.ListIterator;
 
 
 public class TestingClass extends Application {
@@ -65,27 +65,28 @@ public class TestingClass extends Application {
         new Post(4, 2, "dsadas", "12.4.2020", list);
 
 
-        User user3 = Main.getUserFromID(2);
+//        User user3 = Main.getUserFromID(2);
 
-
-        Iterator<Post> iterable = user3.getPosts().iterator();
-
-        while (iterable.hasNext()) {
-            System.out.println(iterable.next().print());
-        }
+        ListIterator<User> iterator = Main.userList.iterator();
+//        while (iterator.hasPrevious()) {
+//            System.out.println(iterator.previous().print());
+//        }
 //
-//        while (iterable.hasNext()) {
-//            User user = iterable.next();
+//        while (listIterator1.hasNext()) {
+//            System.out.println(((Post) listIterator1.prev()).print());
+//        }
+//
+//        for (User user:Main.userList) {
 //            System.out.println(user.print());
 //            user.getPostsSharedWith().traverse();
 //        }
 //
 //        DeleteUser.deleteUser(2,false);
 //
-//        iterable = Main.userList.iterator();
+//        iterator = Main.userList.iterator();
 //
-//        while (iterable.hasNext()) {
-//            User user = iterable.next();
+//        while (iterator.hasNext()) {
+//            User user = iterator.next();
 //            System.out.println(user.print());
 //            user.getPostsSharedWith().traverse();
 //        }

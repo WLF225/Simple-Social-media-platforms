@@ -39,6 +39,8 @@ public class ReadFiles implements EventHandler<ActionEvent> {
                 throw new AlertException("Posts file not found.");
             }
 
+            Main.userList.clear();
+
             //To read user file
             Scanner scanner = new Scanner(userFile);
             boolean cond = true;
@@ -50,6 +52,10 @@ public class ReadFiles implements EventHandler<ActionEvent> {
                     if (parts.length != 3) {
                         throw new NumberFormatException();
                     }
+                    for (int i = 0; i < parts.length; i++) {
+                        parts[i] = parts[i].trim();
+                    }
+
                     Main.userList.insetSorted(new User(Integer.parseInt(parts[0]),parts[1],Integer.parseInt(parts[2])));
                     if (CreateNewUser.userID <= Integer.parseInt(parts[0]))
                         CreateNewUser.userID = Integer.parseInt(parts[0])+1;
@@ -90,8 +96,10 @@ public class ReadFiles implements EventHandler<ActionEvent> {
                 try {
                     String line = scanner.nextLine();
                     String[] parts = line.split(",");
+                    parts[0] = parts[0].trim();
                     User user = Main.getUserFromID(Integer.parseInt(parts[0]));
                     for (int i = 1; i < parts.length; i++) {
+                        parts[i] = parts[i].trim();
                         //This try is to make it read the next friend even if there is wrong friend in the line
                         try {
                             if (user == null)
@@ -153,12 +161,18 @@ public class ReadFiles implements EventHandler<ActionEvent> {
                 try {
                     String line = scanner.nextLine();
                     String[] parts = line.split(",");
+                    for (int i = 1; i < parts.length; i++) {
+                        parts[i] = parts[i].trim();
+                    }
                     DLinkedList<Integer> sharedWithLL = new DLinkedList<>();
 
                     for (int i = 4; i < parts.length; i++) {
                         sharedWithLL.insetSorted(Integer.parseInt(parts[i]));
                     }
-                    new Post(Integer.parseInt(parts[0]),Integer.parseInt(parts[1]),parts[2],parts[3],sharedWithLL);
+                    int id = Integer.parseInt(parts[0]);
+                    if(id >= CreateNewPost.postID)
+                        CreateNewPost.postID = id+1;
+                    new Post(id,Integer.parseInt(parts[1]),parts[2],parts[3],sharedWithLL);
                 } catch (AlertException e1){
                     if (cond) {
                         Alert alertE = new Alert(Alert.AlertType.ERROR);

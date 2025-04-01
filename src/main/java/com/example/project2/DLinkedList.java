@@ -1,14 +1,15 @@
 package com.example.project2;
 
-import java.util.Iterator;
+import javafx.collections.ObservableList;
+
+import java.util.ListIterator;
 
 public class DLinkedList<T extends Comparable<T>> implements Iterable<T> {
 
     private DNode<T> head;
 
     public DLinkedList() {
-        DNode<T> dummy = new DNode<>(null);
-        head = dummy;
+        head = new DNode<>(null);
         head.setNext(head);
         head.setPrev(head);
     }
@@ -49,8 +50,8 @@ public class DLinkedList<T extends Comparable<T>> implements Iterable<T> {
     //This implementation is only for sorted list
     public void removeDuplicates() {
         DNode<T> curr = head.getNext();
-        while (curr.getNext() != head){
-            if (curr.getNext().getData().compareTo(curr.getData())==0) {
+        while (curr.getNext() != head) {
+            if (curr.getNext().getData().compareTo(curr.getData()) == 0) {
                 curr.getNext().getNext().setPrev(curr);
                 curr.setNext(curr.getNext().getNext());
                 continue;
@@ -99,18 +100,68 @@ public class DLinkedList<T extends Comparable<T>> implements Iterable<T> {
         return head.getNext() == head;
     }
 
-    @Override
-    public Iterator<T> iterator() {
-        return new ListIterator();
+
+    public ListIterator<T> iterator() {
+        return new Iterator();
     }
 
-    private class ListIterator implements Iterator<T> {
-        private DNode<T> curr = head.getNext();
-        public boolean hasNext() {return curr != head;}
+    public void addToObservableList(ObservableList<T> list) {
+        for (T item : this) {
+            list.add(item);
+        }
+    }
+
+    //I used this instead of the normal iterator because it have prev not only next
+    public class Iterator implements ListIterator<T> {
+        private DNode<T> curr = head;
+
+        @Override
+        public boolean hasNext() {
+            return curr.getNext() != head;
+        }
+
+        @Override
         public T next() {
-            T t = curr.getData();
+            T t = curr.getNext().getData();
             curr = curr.getNext();
             return t;
+        }
+
+        @Override
+        public boolean hasPrevious() {
+            return curr.getPrev() != head;
+        }
+
+        @Override
+        public T previous() {
+            T t = curr.getPrev().getData();
+            curr = curr.getPrev();
+            return t;
+        }
+
+        @Override
+        public int nextIndex() {
+            return 0;
+        }
+
+        @Override
+        public int previousIndex() {
+            return 0;
+        }
+
+        @Override
+        public void remove() {
+
+        }
+
+        @Override
+        public void set(T t) {
+
+        }
+
+        @Override
+        public void add(T t) {
+
         }
     }
 }

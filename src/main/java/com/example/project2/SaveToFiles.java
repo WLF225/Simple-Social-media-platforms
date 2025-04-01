@@ -4,10 +4,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.stage.FileChooser;
-
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.Iterator;
+import java.util.ListIterator;
 
 public class SaveToFiles implements EventHandler<ActionEvent> {
 
@@ -44,13 +43,13 @@ public class SaveToFiles implements EventHandler<ActionEvent> {
             PrintWriter friendsPR = new PrintWriter(friendsFile);
             PrintWriter postsFR = new PrintWriter(postsFile);
 
-            Iterator<User> currUser = Main.userList.iterator();
+            ListIterator<User> currUser = Main.userList.iterator();
 
             //To print the users
             while (currUser.hasNext()) {
                 User user = currUser.next();
                 userPR.println(user.print());
-                Iterator<Post> currPost = user.getPosts().iterator();
+                ListIterator<Post> currPost = user.getPosts().iterator();
                 //To print friends
                 if (!user.getFriends().isEmpty())
                     friendsPR.println(user.printFriends());

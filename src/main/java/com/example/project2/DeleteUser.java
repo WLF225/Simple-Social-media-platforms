@@ -7,17 +7,20 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 
 import java.util.Iterator;
+import java.util.ListIterator;
 
 public class DeleteUser implements EventHandler<ActionEvent> {
 
     TextField tF;
     int id;
+    boolean confirmation;
 
     public DeleteUser(TextField tF) {
         this.tF = tF;
     }
-    public DeleteUser(int id) {
+    public DeleteUser(int id,boolean confirmation) {
         this.id = id;
+        this.confirmation = confirmation;
     }
 
     public void handle(ActionEvent event) {
@@ -25,11 +28,11 @@ public class DeleteUser implements EventHandler<ActionEvent> {
             id = Integer.parseInt(tF.getText());
         }
 
-        deleteUser(id,true);
+        deleteUser(id,confirmation);
 
     }
 
-    public static void deleteUser(int id, boolean confirmation) {
+    private void deleteUser(int id, boolean confirmation) {
 
         User user = Main.getUserFromID(id);
         if (user == null) {
@@ -54,13 +57,19 @@ public class DeleteUser implements EventHandler<ActionEvent> {
 
             //To delete all his friends and posts from and to them
 
-            Iterator<User> iterator = user.getFriends().iterator();
+            ListIterator<User> iterator = user.getFriends().iterator();
 
             while (iterator.hasNext())
-                DeleteFriend.deleteFriend(id,iterator.next().getId(),false);
+                new DeleteFriend(id,iterator.next().getId(),false).handle(null);
 
             //To delete the user from the list
             Main.userList.delete(user);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Success");
+            alert.setHeaderText(null);
+            alert.setContentText("User with id "+id+" deleted successfully");
+            alert.showAndWait();
 
         }
 

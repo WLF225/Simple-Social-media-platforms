@@ -1,6 +1,6 @@
 package com.example.project2;
 
-import java.util.Iterator;
+import java.util.ListIterator;
 
 public class User implements Comparable<User> {
 
@@ -81,7 +81,7 @@ public class User implements Comparable<User> {
 
     //To make sure the id does not exist
     public void duplicatedID(int id) {
-        Iterator<User> iterator = Main.userList.iterator();
+        ListIterator<User> iterator = Main.userList.iterator();
 
         while (iterator.hasNext()) {
             if (iterator.next().id == id)
@@ -100,7 +100,7 @@ public class User implements Comparable<User> {
         return "ID: " + id + ", Name: " + name + ", Age: " + age;
     }
 
-    public void addFriend(int id) {
+    public User addFriend(int id) {
         if (id == this.id)
             throw new AlertException("The user cannot add himself.");
 
@@ -112,12 +112,13 @@ public class User implements Comparable<User> {
             throw new AlertException("The friend with id "+id+" already added.");
         friends.insetSorted(friend);
         friend.getFriends().insetSorted(this);
+        return friend;
     }
 
     public User getFriendFromId(int id) {
         if (friends.isEmpty())
             return null;
-        Iterator<User> it = friends.iterator();
+        ListIterator<User> it = friends.iterator();
         while (it.hasNext()) {
             User user = it.next();
             if (user.getId() == id) {
@@ -133,7 +134,7 @@ public class User implements Comparable<User> {
 
     public String printFriends(){
         String friendsString = id+"";
-        Iterator<User> curr = friends.iterator();
+        ListIterator<User> curr = friends.iterator();
         while (curr.hasNext()) {
             friendsString += ","+curr.next().getId();
         }

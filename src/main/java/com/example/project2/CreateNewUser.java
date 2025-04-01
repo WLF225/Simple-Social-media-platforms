@@ -1,6 +1,5 @@
 package com.example.project2;
 
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -8,7 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -73,15 +71,24 @@ public class CreateNewUser extends Pane {
 
         buttons[2].setOnAction(event -> {
 
+            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+
             try {
+                if (textFields[1].getText().isEmpty()){
+                    errorAlert.setTitle("Error");
+                    errorAlert.setHeaderText(null);
+                    errorAlert.setContentText("The username cannot be empty.");
+                    errorAlert.showAndWait();
+                    return;
+                }
                 Main.userList.insetSorted(new User(userID,textFields[1].getText(),
                         Integer.parseInt(textFields[2].getText())));
 
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Success");
-                alert.setHeaderText(null);
-                alert.setContentText("User created successfully with ID: " + userID+", you will need the ID to loge in.");
-                alert.showAndWait();
+                Alert informationAlert = new Alert(Alert.AlertType.INFORMATION);
+                informationAlert.setTitle("Success");
+                informationAlert.setHeaderText(null);
+                informationAlert.setContentText("User created successfully with ID: " + userID+", you will need the ID to loge in.");
+                informationAlert.showAndWait();
 
                 userID++;
                 buttons[1].fire();
@@ -90,17 +97,15 @@ public class CreateNewUser extends Pane {
                     stage.setScene(new Scene(new MainMenu(stage)));
                 }
             }catch (AlertException e){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText(e.getMessage());
-                alert.showAndWait();
+                errorAlert.setTitle("Error");
+                errorAlert.setHeaderText(null);
+                errorAlert.setContentText(e.getMessage());
+                errorAlert.showAndWait();
             }catch (NumberFormatException e2){
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText(null);
-                alert.setContentText("Age text field should be an integer");
-                alert.showAndWait();
+                errorAlert.setTitle("Error");
+                errorAlert.setHeaderText(null);
+                errorAlert.setContentText("Age text field should be an integer");
+                errorAlert.showAndWait();
             }
         });
 

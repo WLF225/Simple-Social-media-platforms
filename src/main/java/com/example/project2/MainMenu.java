@@ -14,17 +14,20 @@ import javafx.stage.Stage;
 
 public class MainMenu extends BorderPane {
 
+    private boolean saved = false;
+
     public MainMenu(Stage stage) {
         stage.setTitle("Main Menu");
 
         Button[] buttons = {new Button("Enter as a user"), new Button("Enter as an administrator"),
-                new Button("Read all the files"), new Button("Save to files")};
+                new Button("Read all the files"), new Button("Save to files"),new Button("Exit")};
 
 
         styling(buttons, 30);
 
         buttons[0].setOnAction(e -> {
             boolean cond = true;
+            //To remind the user to read files
             if (Main.userList.isEmpty()) {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Confirmation");
@@ -34,36 +37,55 @@ public class MainMenu extends BorderPane {
                 cond = alert.showAndWait().get().equals(ButtonType.OK);
             }
             if (cond) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Join as a user");
-                alert.setHeaderText(null);
-                alert.setContentText("How you want to join ?");
+                //To make the user loge in or sign up
+                Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                confirmationAlert.setTitle("Join as a user");
+                confirmationAlert.setHeaderText(null);
+                confirmationAlert.setContentText("How you want to join ?");
                 ButtonType logeInBT = new ButtonType("loge in");
                 ButtonType signUpBT = new ButtonType("Sign up");
-                alert.getButtonTypes().setAll(logeInBT, signUpBT, ButtonType.CANCEL);
+                confirmationAlert.getButtonTypes().setAll(logeInBT, signUpBT, ButtonType.CANCEL);
 
-                ButtonType bT = alert.showAndWait().get();
+                ButtonType bT = confirmationAlert.showAndWait().get();
                 if (bT == ButtonType.CANCEL) {
                     return;
                 }
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setTitle("Error");
+                errorAlert.setHeaderText(null);
+
                 cond = bT == logeInBT;
+                //To enter the loge in menu
                 if (cond) {
                     if (Main.userList.isEmpty()) {
-                        Alert alert1 = new Alert(Alert.AlertType.ERROR);
-                        alert1.setTitle("Error");
-                        alert1.setHeaderText(null);
-                        alert1.setContentText("You can't enter without reading files or create new account.");
-                        alert1.showAndWait();
+                        errorAlert.setContentText("You can't enter without reading files or create new account.");
+                        errorAlert.showAndWait();
                         return;
                     }
-                    Alert alert1 = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert1.setTitle("Confirmation");
-                    alert1.setHeaderText("Enter The ID for your user");
+                    Alert confirmationAlert2 = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirmationAlert2.setTitle("Confirmation");
+                    confirmationAlert2.setHeaderText("Enter The ID for your user");
                     TextField idTF = new TextField();
                     idTF.setPromptText("Enter The ID");
-                    alert1.getDialogPane().setContent(new Pane(idTF));
-                    alert1.showAndWait();
-                    System.out.println(idTF.getText());
+                    confirmationAlert2.getDialogPane().setContent(new Pane(idTF));
+
+                    //To make him enter his ID and make sure its not wrong
+                    if (confirmationAlert2.showAndWait().get().equals(ButtonType.OK)) {
+                        try {
+                            int id = Integer.parseInt(idTF.getText());
+                            User user = Main.getUserFromID(id);
+                            if (user == null) {
+                                errorAlert.setContentText("The account you are trying to access does not exist.");
+                                errorAlert.showAndWait();
+                                return;
+                            }
+                            stage.setScene(new Scene(new UserMenu(stage, user)));
+
+                        } catch (NumberFormatException e1) {
+                            errorAlert.setContentText("ID text field should be an integer");
+                            errorAlert.showAndWait();
+                        }
+                    }
                 } else {
                     stage.setScene(new Scene(new CreateNewUser(stage, this)));
                 }
@@ -72,11 +94,27 @@ public class MainMenu extends BorderPane {
 
         buttons[2].setOnAction(new ReadFiles());
 
-        buttons[3].setOnAction(new SaveToFiles());
+        buttons[3].setOnAction(event -> {
+            new SaveToFiles().handle(null);
+            saved = true;
+        });
+        buttons[4].setOnAction(event -> {
+            boolean cond = true;
+            if (!saved) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Confirmation");
+                alert.setHeaderText(null);
+                alert.setContentText("Are you sure you want to exit without save changes ?");
+                cond = alert.showAndWait().get() == ButtonType.OK;
+            }
+            if (cond) {
+                System.exit(0);
+            }
+        });
 
 
         VBox vbox = new VBox(30, buttons[0], buttons[1]);
-        HBox hbox = new HBox(30, buttons[2], buttons[3]);
+        HBox hbox = new HBox(30, buttons[2], buttons[3],buttons[4]);
         hbox.setAlignment(Pos.TOP_RIGHT);
 
         setLeft(vbox);
