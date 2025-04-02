@@ -1,0 +1,6 @@
+Friends Report
+------------------------
+User: Layla, his friends:  Ahmed
+User: Khaled, his friends:  Ahmed, Fatima
+User: Fatima, his friends:  Ahmed, Khaled
+User: Ahmed, his friends:  Fatima, Khaled, Layla

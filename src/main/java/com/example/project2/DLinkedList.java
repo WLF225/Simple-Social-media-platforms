@@ -43,8 +43,11 @@ public class DLinkedList<T extends Comparable<T>> implements Iterable<T> {
 
     }
 
-    public void traverse() {
-        System.out.println(toString());
+    public int size() {
+        int size = 0;
+        for (T t:this)
+            size++;
+        return size;
     }
 
     //This implementation is only for sorted list

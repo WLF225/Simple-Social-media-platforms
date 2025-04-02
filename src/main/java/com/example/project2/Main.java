@@ -3,7 +3,6 @@ package com.example.project2;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import java.util.ListIterator;
 
 public class Main extends Application {
 
@@ -22,9 +21,7 @@ public class Main extends Application {
     }
 
     public static User getUserFromID(int id) {
-        ListIterator<User> it = userList.iterator();
-        while (it.hasNext()) {
-            User user = it.next();
+        for (User user : userList) {
             if (user.getId() == id) {
                 return user;
             }

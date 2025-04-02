@@ -12,44 +12,47 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class FriendManagement extends BorderPane {
+public class UsersManagement extends BorderPane {
 
-    public FriendManagement(Stage stage, User user) {
+    public UsersManagement(Stage stage, DLinkedList<User> users, User user, boolean manage) {
 
-        stage.setTitle("Friend Management for "+user.getName()+" User");
+        if (manage)
+            stage.setTitle("Friend Management for");
+        else
+            stage.setTitle("View users");
 
-        Button[] buttons = {new Button("Search for a friend by his name") ,new Button("Search for friend by his ID"),
-                new Button("Add Friend by his ID"), new Button("View friend from ID"), new Button("Back")};
+        Button[] buttons = {new Button("Search for a friend by his name"), new Button("Search for friend by his ID"),
+                new Button("Add Friend by his ID"), new Button("View User from ID"), new Button("Back")};
 
         TextField textField = new TextField();
 
-        MainMenu.styling(buttons,30);
+        MainMenu.styling(buttons, 30);
 
         textField.setFont(Font.font(30));
         textField.setPromptText("Enter Friend ID or Name");
 
         ObservableList<User> friendsList = FXCollections.observableArrayList();
 
-        user.getFriends().addToObservableList(friendsList);
+        users.addToObservableList(friendsList);
 
         TableView<User> tableView = new TableView<>(friendsList);
 
-        TableColumn<User,Integer> IdTC = new TableColumn<>("Friend ID");
+        TableColumn<User, Integer> IdTC = new TableColumn<>("Friend ID");
         IdTC.setCellValueFactory(new PropertyValueFactory<>("id"));
         IdTC.setStyle("-fx-font-size: 34px;-fx-alignment: CENTER;");
         IdTC.setMinWidth(300);
 
-        TableColumn<User,String> NameTC = new TableColumn<>("Name");
+        TableColumn<User, String> NameTC = new TableColumn<>("Name");
         NameTC.setCellValueFactory(new PropertyValueFactory<>("name"));
         NameTC.setStyle("-fx-font-size: 34px;-fx-alignment: CENTER;");
         NameTC.setMinWidth(400);
 
-        TableColumn<User,Integer> ageTC = new TableColumn<>("Age");
+        TableColumn<User, Integer> ageTC = new TableColumn<>("Age");
         ageTC.setCellValueFactory(new PropertyValueFactory<>("age"));
         ageTC.setStyle("-fx-font-size: 34px;-fx-alignment: CENTER;");
         ageTC.setMinWidth(300);
 
-         tableView.getColumns().addAll(IdTC,NameTC,ageTC);
+        tableView.getColumns().addAll(IdTC, NameTC, ageTC);
 
         setCenter(tableView);
 
@@ -67,15 +70,15 @@ public class FriendManagement extends BorderPane {
             }
 
             User prev = null;
-            for (User friend : user.getFriends()) {
-                if (friend.getName().toLowerCase().matches(".*"+textField.getText().toLowerCase()+".*")){
+            for (User friend : users) {
+                if (friend.getName().toLowerCase().matches(".*" + textField.getText().toLowerCase() + ".*")) {
                     searchList.add(friend);
                     prev = friend;
                     cond = true;
-                }else if (prev != null)
+                } else if (prev != null)
                     break;
             }
-            if (!cond){
+            if (!cond) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");
                 alert.setHeaderText(null);
@@ -101,7 +104,7 @@ public class FriendManagement extends BorderPane {
 
                 boolean cond = false;
 
-                for (User friend : user.getFriends()) {
+                for (User friend : users) {
                     if (friend.getId() == id) {
                         searchList.add(friend);
                         cond = true;
@@ -114,33 +117,34 @@ public class FriendManagement extends BorderPane {
                     return;
                 }
                 tableView.setItems(searchList);
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 alert.setContentText("Enter a valid ID");
                 alert.showAndWait();
             }
         });
-
-        buttons[2].setOnAction(e -> {
-            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-            errorAlert.setTitle("Error");
-            errorAlert.setHeaderText(null);
-            try {
-                int id = Integer.parseInt(textField.getText());
-                User friend = user.addFriend(id);
-                friendsList.add(friend);
-                Alert informationAlert = new Alert(Alert.AlertType.INFORMATION);
-                informationAlert.setTitle("Success");
-                informationAlert.setHeaderText(null);
-                informationAlert.setContentText("Friend added successfully");
-                informationAlert.showAndWait();
-            }catch (NumberFormatException ex) {
-                errorAlert.setContentText("Please enter a valid friend ID");
-                errorAlert.showAndWait();
-            }catch (AlertException ex1){
-                errorAlert.setContentText(ex1.getMessage());
-                errorAlert.showAndWait();
-            }
-        });
+        if (manage) {
+            buttons[2].setOnAction(e -> {
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setTitle("Error");
+                errorAlert.setHeaderText(null);
+                try {
+                    int id = Integer.parseInt(textField.getText());
+                    User friend = user.addFriend(id);
+                    friendsList.add(friend);
+                    Alert informationAlert = new Alert(Alert.AlertType.INFORMATION);
+                    informationAlert.setTitle("Success");
+                    informationAlert.setHeaderText(null);
+                    informationAlert.setContentText("Friend added successfully");
+                    informationAlert.showAndWait();
+                } catch (NumberFormatException ex) {
+                    errorAlert.setContentText("Please enter a valid friend ID");
+                    errorAlert.showAndWait();
+                } catch (AlertException ex1) {
+                    errorAlert.setContentText(ex1.getMessage());
+                    errorAlert.showAndWait();
+                }
+            });
+        }
 
         buttons[3].setOnAction(e -> {
             Alert errorAlert = new Alert(Alert.AlertType.ERROR);
@@ -148,23 +152,39 @@ public class FriendManagement extends BorderPane {
             errorAlert.setHeaderText(null);
             try {
                 int id = Integer.parseInt(textField.getText());
-                User friend = user.getFriendFromId(id);
+                User friend = null;
+                for (User curr : users) {
+                    if (curr.getId() == id) {
+                        friend = curr;
+                    }
+                }
+
                 if (friend == null)
                     throw new AlertException("Friend not found");
-                stage.setScene(new Scene(new ViewFriends(stage,user,id)));
-            }catch (AlertException ex1){
+
+                stage.setScene(new Scene(new ViewUsers(stage, users,user, id, manage)));
+
+            } catch (AlertException ex1) {
                 errorAlert.setContentText(ex1.getMessage());
                 errorAlert.showAndWait();
-            }catch (NumberFormatException ex2){
+            } catch (NumberFormatException ex2) {
                 errorAlert.setContentText("Enter a valid friend ID");
                 errorAlert.showAndWait();
             }
 
         });
 
-        buttons[4].setOnAction(e -> stage.setScene(new Scene(new UserMenu(stage,user))));
+        if (manage)
+            buttons[4].setOnAction(e -> stage.setScene(new Scene(new UserMenu(stage, user))));
+        else
+            buttons[4].setOnAction(e -> stage.setScene(new Scene(new ReportingAndStatistics(stage))));
 
-        HBox hBox = new HBox(30,buttons[0],buttons[1],buttons[2],buttons[3]);
+        HBox hBox;
+        if (manage)
+            hBox = new HBox(30, buttons[0], buttons[1], buttons[2], buttons[3]);
+        else
+            hBox = new HBox(30, buttons[0], buttons[1], buttons[3]);
+
         VBox vbox = new VBox(30, textField, hBox);
 
         setTop(vbox);

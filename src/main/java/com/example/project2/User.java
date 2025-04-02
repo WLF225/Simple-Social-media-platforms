@@ -95,10 +95,6 @@ public class User implements Comparable<User> {
         return name.compareTo(o.name);
     }
 
-    @Override
-    public String toString() {
-        return "ID: " + id + ", Name: " + name + ", Age: " + age;
-    }
 
     public User addFriend(int id) {
         if (id == this.id)
@@ -127,8 +123,8 @@ public class User implements Comparable<User> {
         }
         return null;
     }
-
-    public String print(){
+    @Override
+    public String toString() {
         return id + "," + name + "," + age;
     }
 
@@ -140,6 +136,24 @@ public class User implements Comparable<User> {
         }
         return friendsString;
     }
+
+    public int postsLast3Weeks(){
+        int postsNum = 0;
+        for (Post post:posts) {                                                 //3 weeks millis
+            if (post.getDate().getTimeInMillis() - System.currentTimeMillis() < 3*7*24*60*60*1000) {
+                postsNum++;
+            }
+        }
+        return postsNum;
+    }
+    public String friendsToString(){
+        String friendsString = "";
+        for (User user:friends) {
+            friendsString += ", "+user.getName();
+        }
+        return friendsString.replaceFirst(",","");
+    }
+
 
     @Override
     public boolean equals(Object o) {

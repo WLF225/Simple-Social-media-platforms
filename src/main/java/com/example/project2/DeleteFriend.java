@@ -53,31 +53,30 @@ public class DeleteFriend implements EventHandler<ActionEvent> {
         }
 
         //To remove user id from shared to list in friend posts
-        ListIterator<Post> currPost = friend.getPosts().iterator();
-        while (currPost.hasNext()) {
-            currPost.next().getSharedTo().delete(userID);
+
+        for (Post currPost:friend.getPosts()){
+            currPost.getSharedWith().delete(user);
         }
+
         //To remove posts created by user from friend shared with list
-        currPost = friend.getPostsSharedWith().iterator();
-        while (currPost.hasNext()) {
-            Post post = currPost.next();
-            if (post.getCreatorID() == userID) {
-                friend.getPostsSharedWith().delete(post);
+        for (Post currPost:friend.getPostsSharedWith()){
+            if (currPost.getCreatorID() == userID){
+                friend.getPostsSharedWith().delete(currPost);
             }
         }
+
         //To remove friend id from shared to list in user posts
-        currPost = user.getPosts().iterator();
-        while (currPost.hasNext()) {
-            currPost.next().getSharedTo().delete(userID);
+        for (Post currPost:user.getPosts()){
+            currPost.getSharedWith().delete(user);
         }
+
         //To remove posts created by friend from user shared with list
-        currPost = user.getPostsSharedWith().iterator();
-        while (currPost.hasNext()) {
-            Post post = currPost.next();
-            if (post.getCreatorID() == friendID) {
-                user.getPostsSharedWith().delete(post);
+        for (Post currPost:user.getPostsSharedWith()){
+            if (currPost.getCreatorID() == userID){
+                user.getPostsSharedWith().delete(currPost);
             }
         }
+
         //To delete them from each others friend list
         friend.getFriends().delete(user);
         user.getFriends().delete(friend);

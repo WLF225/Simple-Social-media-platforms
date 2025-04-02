@@ -17,9 +17,9 @@ public class ViewPost extends Pane {
 
     Post post;
 
-    public ViewPost(Stage stage, User user, int postID) {
+    public ViewPost(Stage stage, DLinkedList<Post> posts,User user ,int postID, boolean manage) {
 
-        stage.setTitle("View Post");
+        stage.setTitle("View Posts");
 
         ImageView imageView = new ImageView(new Image("viewPost.png"));
         imageView.setLayoutX(1300);
@@ -41,7 +41,7 @@ public class ViewPost extends Pane {
             textField.setDisable(true);
         }
 
-        textFields[1].setText(user.getId() + "");
+
         textFields[2].setDisable(false);
 
         Label[] labels = {new Label("Post ID: "), new Label("Creator ID: "), new Label("Content: "),
@@ -51,7 +51,7 @@ public class ViewPost extends Pane {
             label.setFont(Font.font(30));
         }
 
-        ListIterator<Post> currPost = user.getPosts().iterator();
+        ListIterator<Post> currPost = posts.iterator();
 
         buttons[0].setOnAction(event -> {
             post = currPost.previous();
@@ -62,6 +62,7 @@ public class ViewPost extends Pane {
                 buttons[0].setDisable(true);
 
             textFields[0].setText(post.getId() + "");
+            textFields[1].setText(post.getCreatorID() + "");
             textFields[2].setText(post.getContent());
             textFields[3].setText(post.sharedToToString().replaceFirst(",", ""));
             LocalDate localDate = post.getDate().toZonedDateTime().toLocalDate();
@@ -77,21 +78,23 @@ public class ViewPost extends Pane {
                 buttons[1].setDisable(true);
 
             textFields[0].setText(post.getId() + "");
+            textFields[1].setText(post.getCreatorID() + "");
             textFields[2].setText(post.getContent());
             textFields[3].setText(post.sharedToToString().replaceFirst(",", ""));
             LocalDate localDate = post.getDate().toZonedDateTime().toLocalDate();
             datePicker.setValue(localDate);
         });
-
-        buttons[2].setOnAction(event -> {
-            post.setContent(textFields[2].getText());
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Edit content");
-            alert.setHeaderText(null);
-            alert.setContentText("The post content edited successfully.");
-            alert.showAndWait();
-        });
-
+        if (manage) {
+            buttons[2].setOnAction(event -> {
+                post.setContent(textFields[2].getText());
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Edit content");
+                alert.setHeaderText(null);
+                alert.setContentText("The post content edited successfully.");
+                alert.showAndWait();
+            });
+        }
+        if (manage) {
         buttons[3].setOnAction(event -> {
             try {
                 int id = Integer.parseInt(textFields[0].getText());
@@ -112,8 +115,11 @@ public class ViewPost extends Pane {
                 errorAlert.showAndWait();
             }
         });
-
-        buttons[4].setOnAction(event -> stage.setScene(new Scene(new PostManagement(stage, user))));
+}
+        if (manage)
+            buttons[4].setOnAction(event -> stage.setScene(new Scene(new PostManagement(stage, posts,user,true))));
+        else
+            buttons[4].setOnAction(event -> stage.setScene(new Scene(new PostManagement(stage, posts,user,false))));
 
         //To find the post with his iterator so we can use next and previse work
         while (currPost.hasNext()) {
@@ -124,10 +130,19 @@ public class ViewPost extends Pane {
                 break;
             }
         }
+        if (!manage) {
+            textFields[2].setDisable(true);
+        }
 
-        VBox labelsVB = new VBox(40, labels[0], labels[1], labels[2], labels[3], labels[4]);
-
-        VBox textFieldsVB = new VBox(30, textFields[0], textFields[1], textFields[2], datePicker, textFields[3]);
+        VBox labelsVB;
+        VBox textFieldsVB;
+        if (manage) {
+             labelsVB = new VBox(40, labels[0], labels[1], labels[2], labels[3], labels[4]);
+             textFieldsVB = new VBox(30, textFields[0], textFields[1], textFields[2], datePicker, textFields[3]);
+        }else {
+            labelsVB = new VBox(40, labels[0], labels[1], labels[2], labels[3]);
+            textFieldsVB = new VBox(30, textFields[0], textFields[1], textFields[2], datePicker);
+        }
 
         HBox mainHBox = new HBox(30, labelsVB, textFieldsVB);
 
@@ -138,10 +153,16 @@ public class ViewPost extends Pane {
         HBox nextPrevHB = new HBox(50, buttons[0], buttons[1]);
         nextPrevHB.setLayoutX(100);
         nextPrevHB.setLayoutY(700);
-
-        HBox buttonsHB = new HBox(30, buttons[2], buttons[3], buttons[4]);
-        buttonsHB.setLayoutX(1300);
-        buttonsHB.setLayoutY(900);
+        HBox buttonsHB;
+        if (manage) {
+            buttonsHB = new HBox(30, buttons[2], buttons[3], buttons[4]);
+            buttonsHB.setLayoutX(1300);
+            buttonsHB.setLayoutY(900);
+        }else {
+            buttonsHB = new HBox(30, buttons[4]);
+            buttonsHB.setLayoutX(1500);
+            buttonsHB.setLayoutY(900);
+        }
 
         getChildren().addAll(mainVB, buttonsHB, imageView, nextPrevHB);
 

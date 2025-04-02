@@ -15,21 +15,21 @@ import javafx.stage.Stage;
 
 import java.util.ListIterator;
 
-public class ViewFriends extends Pane {
+public class ViewUsers extends Pane {
 
     User friend = null;
 
-    public ViewFriends(Stage stage, User user, int id){
+    public ViewUsers(Stage stage, DLinkedList<User> users, User user, int id, boolean manage) {
 
-        stage.setTitle("View friends");
+        stage.setTitle("View Users");
 
-        ListIterator<User> currFriend = user.getFriends().iterator();
+        ListIterator<User> currFriend = users.iterator();
 
-        Label[] labels = {new Label("ID: "),new Label("Username: "),new Label("Age: ")};
+        Label[] labels = {new Label("ID: "), new Label("Username: "), new Label("Age: ")};
 
-        TextField[] textFields = {new TextField(),new TextField(),new TextField()};
+        TextField[] textFields = {new TextField(), new TextField(), new TextField()};
 
-        Button[] buttons = {new Button("Delete"),new Button("Previse"), new Button("Next"), new Button("Back")};
+        Button[] buttons = {new Button("Delete"), new Button("Previse"), new Button("Next"), new Button("Back")};
 
         ImageView imageView = new ImageView(new Image("friends.png"));
 
@@ -45,28 +45,30 @@ public class ViewFriends extends Pane {
         imageView.setLayoutX(1100);
         imageView.setLayoutY(100);
 
-        MainMenu.styling(buttons,40);
+        MainMenu.styling(buttons, 40);
 
-        buttons[0].setOnAction(e -> {
-            Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-            errorAlert.setTitle("Error");
-            errorAlert.setHeaderText(null);
-            try {
-                int friendID = Integer.parseInt(textFields[0].getText());
-                new DeleteFriend(user.getId(),friendID,true).handle(null);
+        if (manage){
+            buttons[0].setOnAction(e -> {
+                Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                errorAlert.setTitle("Error");
+                errorAlert.setHeaderText(null);
+                try {
+                    int friendID = Integer.parseInt(textFields[0].getText());
+                    new DeleteFriend(user.getId(), friendID, true).handle(null);
 
-                Alert informationAlert = new Alert(Alert.AlertType.INFORMATION);
-                informationAlert.setTitle("Success");
-                informationAlert.setHeaderText(null);
-                informationAlert.setContentText("Friend removed successfully");
-                informationAlert.showAndWait();
+                    Alert informationAlert = new Alert(Alert.AlertType.INFORMATION);
+                    informationAlert.setTitle("Success");
+                    informationAlert.setHeaderText(null);
+                    informationAlert.setContentText("Friend removed successfully");
+                    informationAlert.showAndWait();
 
-                buttons[3].fire();
-            }catch (AlertException ex1){
-                errorAlert.setContentText(ex1.getMessage());
-                errorAlert.showAndWait();
-            }
-        });
+                    buttons[3].fire();
+                } catch (AlertException ex1) {
+                    errorAlert.setContentText(ex1.getMessage());
+                    errorAlert.showAndWait();
+                }
+            });
+    }
 
         buttons[1].setOnAction(event -> {
             friend = currFriend.previous();
@@ -90,9 +92,11 @@ public class ViewFriends extends Pane {
             textFields[2].setText(friend.getAge()+"");
         });
 
-        buttons[3].setOnAction(event -> {
-            stage.setScene(new Scene(new FriendManagement(stage, user)));
-        });
+        if (manage)
+            buttons[3].setOnAction(event -> stage.setScene(new Scene(new UsersManagement(stage, users,user,true))));
+        else
+            buttons[3].setOnAction(event -> stage.setScene(new Scene(new UsersManagement(stage, users,user,false))));
+
 
         //To find the friend with his iterator so we can use next and previse work
         while(currFriend.hasNext()){
@@ -115,8 +119,16 @@ public class ViewFriends extends Pane {
         nextPrevHB.setLayoutX(100);
         nextPrevHB.setLayoutY(600);
 
-        HBox buttonsHB = new HBox(30,buttons[0],buttons[3]);
-        buttonsHB.setLayoutX(1100);
+        HBox buttonsHB;
+        if (manage) {
+            buttonsHB = new HBox(30, buttons[0], buttons[3]);
+            buttonsHB.setLayoutX(1100);
+        }
+        else {
+            buttonsHB = new HBox(30, buttons[3]);
+            buttonsHB.setLayoutX(1250);
+        }
+
         buttonsHB.setLayoutY(900);
 
         getChildren().addAll(imageView,mainHB,buttonsHB,nextPrevHB);

@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 
 public class CreateNewUser extends Pane {
 
-    public static int userID = 0;
+    public static int userID = 1;
 
     public CreateNewUser(Stage stage, Pane pane) {
 

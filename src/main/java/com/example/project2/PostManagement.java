@@ -15,22 +15,25 @@ import javafx.stage.Stage;
 
 public class PostManagement extends BorderPane {
 
-    public PostManagement(Stage stage, User user) {
+    public PostManagement(Stage stage, DLinkedList<Post> posts,User user, boolean manage) {
 
-        stage.setTitle("Post Management for " + user.getName());
+        if (manage)
+            stage.setTitle("Post Management");
+        else
+            stage.setTitle("Posts View");
 
-        Button[] buttons = {new Button("Search for a post by its content"),new Button("View post by its ID"),
+        Button[] buttons = {new Button("Search for a post by its content"), new Button("View post by its ID"),
                 new Button("Create new post"), new Button("Back")};
 
         TextField textField = new TextField();
 
-        MainMenu.styling(buttons,40);
+        MainMenu.styling(buttons, 40);
 
         textField.setFont(Font.font(30));
         textField.setPromptText("Enter the post Content or ID");
 
         ObservableList<Post> postsList = FXCollections.observableArrayList();
-        user.getPosts().addToObservableList(postsList);
+        posts.addToObservableList(postsList);
 
         TableView<Post> tableView = new TableView<>(postsList);
 
@@ -44,6 +47,11 @@ public class PostManagement extends BorderPane {
         postCreatorTC.setStyle("-fx-font-size: 34px;-fx-alignment: CENTER;");
         postCreatorTC.setMinWidth(300);
 
+        TableColumn<Post,String> postCreatorNameTC = new TableColumn<>("Creator Name");
+        postCreatorNameTC.setCellValueFactory(new PropertyValueFactory<>("creatorName"));
+        postCreatorNameTC.setStyle("-fx-font-size: 34px;-fx-alignment: CENTER;");
+        postCreatorNameTC.setMinWidth(400);
+
         TableColumn<Post, String> postContentTC = new TableColumn<>("Post Content");
         postContentTC.setCellValueFactory(new PropertyValueFactory<>("content"));
         postContentTC.setStyle("-fx-font-size: 34px;-fx-alignment: CENTER;");
@@ -56,32 +64,37 @@ public class PostManagement extends BorderPane {
 
         TableColumn<Post, String> sharedToTC = new TableColumn<>("Shared To");
         sharedToTC.setCellValueFactory(e ->
-                new SimpleStringProperty(e.getValue().sharedToToString().replaceFirst(",","")));
+                new SimpleStringProperty(e.getValue().sharedToToString().replaceFirst(",", "")));
 
         sharedToTC.setStyle("-fx-font-size: 34px;-fx-alignment: CENTER;");
         sharedToTC.setMinWidth(500);
 
-        tableView.getColumns().addAll(postIdTC, postCreatorTC, postContentTC, postDateTC, sharedToTC);
+        if (manage)
+            tableView.getColumns().addAll(postIdTC, postCreatorTC,postCreatorNameTC, postContentTC, postDateTC, sharedToTC);
+        else
+            tableView.getColumns().addAll(postIdTC, postCreatorTC,postCreatorNameTC, postContentTC, postDateTC);
+
+
 
         setCenter(tableView);
 
         buttons[0].setTooltip(new Tooltip("Search for an empty text field to return to the normal table"));
 
-        buttons[0].setOnAction(e ->{
+        buttons[0].setOnAction(e -> {
             if (textField.getText().isEmpty()) {
                 tableView.setItems(postsList);
-            }else {
+            } else {
                 boolean cond = false;
                 ObservableList<Post> postsList2 = FXCollections.observableArrayList();
                 for (Post post : postsList) {
-                    if (post.getContent().toLowerCase().matches(".*"+textField.getText().toLowerCase()+".*")) {
+                    if (post.getContent().toLowerCase().matches(".*" + textField.getText().toLowerCase() + ".*")) {
                         postsList2.add(post);
                         cond = true;
                     }
                 }
                 if (cond) {
                     tableView.setItems(postsList2);
-                }else {
+                } else {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Error");
                     alert.setHeaderText(null);
@@ -107,23 +120,32 @@ public class PostManagement extends BorderPane {
                     }
                 }
                 if (cond) {
-                    stage.setScene(new Scene(new ViewPost(stage,user,postID)));
-                }else {
+                    stage.setScene(new Scene(new ViewPost(stage, posts, user,postID, manage)));
+                } else {
                     errorAlert.setContentText("Post ID does not match any post of yours");
                     errorAlert.showAndWait();
                 }
 
-            }catch (NumberFormatException e1) {
+            } catch (NumberFormatException e1) {
                 errorAlert.setContentText("Please enter a valid post ID");
                 errorAlert.showAndWait();
             }
         });
 
-        buttons[2].setOnAction(e -> stage.setScene(new Scene(new CreateNewPost(stage,user))));
+        if (manage)
+            buttons[2].setOnAction(e -> stage.setScene(new Scene(new CreateNewPost(stage, user))));
 
-        buttons[3].setOnAction(e -> stage.setScene(new Scene(new UserMenu(stage,user))));
+        if (user != null)
+            buttons[3].setOnAction(e -> stage.setScene(new Scene(new UserMenu(stage, user))));
+        else
+            buttons[3].setOnAction(e -> stage.setScene(new Scene(new ReportingAndStatistics(stage))));
 
-        HBox hBox = new HBox(30,buttons[0],buttons[1],buttons[2]);
+        HBox hBox;
+        if (manage)
+            hBox = new HBox(30, buttons[0], buttons[1], buttons[2]);
+        else
+            hBox = new HBox(30, buttons[0], buttons[1]);
+
         VBox vbox = new VBox(30, textField, hBox);
 
         setTop(vbox);

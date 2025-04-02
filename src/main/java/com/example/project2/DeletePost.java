@@ -63,13 +63,11 @@ public class DeletePost implements EventHandler<ActionEvent> {
                 throw new AlertException("The post deleted cancelled");
         }
 
-
-        ListIterator<Integer> integerIterator = post.getSharedTo().iterator();
         //To delete the post from the other users shared with
-        while (integerIterator.hasNext()) {
-            User user2 = Main.getUserFromID(integerIterator.next());
-            user2.getPostsSharedWith().delete(post);
+        for (User currUser: post.getSharedWith()) {
+            currUser.getPostsSharedWith().delete(post);
         }
+
         //To delete it from the creator
         user.getPosts().delete(post);
 

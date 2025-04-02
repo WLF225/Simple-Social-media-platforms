@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 
 public class CreateNewPost extends Pane {
 
-    public static int postID = 0;
+    public static int postID = 1;
 
     public CreateNewPost(Stage stage, User user) {
 
@@ -66,7 +66,7 @@ public class CreateNewPost extends Pane {
             textFields[3].setText("");
         });
 
-        buttons[0].setOnAction(event -> stage.setScene(new Scene(new PostManagement(stage,user))));
+        buttons[0].setOnAction(event -> stage.setScene(new Scene(new PostManagement(stage,user.getPosts(),user,true))));
 
         buttons[1].setOnAction(event -> {
             textFields[0].setText(postID+"");
@@ -98,7 +98,7 @@ public class CreateNewPost extends Pane {
                 }
 
                 DLinkedList<Integer> sharedWithList = new DLinkedList<>();
-                if (!sharedWithList.isEmpty()) {
+                if (!sharedWith.isEmpty()) {
                     String[] sharedWithParts = sharedWith.split(",");
 
                     for (String sharedWithPart : sharedWithParts) {

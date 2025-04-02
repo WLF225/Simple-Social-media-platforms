@@ -40,11 +40,11 @@ public class UserMenu extends Pane {
         imageView.setLayoutX(1100);
         imageView.setLayoutY(100);
 
-        buttons[0].setOnAction(e -> stage.setScene(new Scene(new SharedPost(stage,user))));
+        buttons[0].setOnAction(e -> stage.setScene(new Scene(new PostManagement(stage,user.getPostsSharedWith(),user,false))));
 
-        buttons[1].setOnAction(e -> stage.setScene(new Scene(new PostManagement(stage,user))));
+        buttons[1].setOnAction(e -> stage.setScene(new Scene(new PostManagement(stage,user.getPosts(), user,true))));
 
-        buttons[2].setOnAction(event -> stage.setScene(new Scene(new FriendManagement(stage,user))));
+        buttons[2].setOnAction(event -> stage.setScene(new Scene(new UsersManagement(stage,user.getFriends(),user,true))));
 
         buttons[3].setOnAction(e -> stage.setScene(new Scene(new EditUser(stage,user))));
 

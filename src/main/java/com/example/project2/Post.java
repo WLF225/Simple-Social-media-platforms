@@ -1,6 +1,5 @@
 package com.example.project2;
 
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.ListIterator;
@@ -11,7 +10,7 @@ public class Post implements Comparable<Post> {
     private int creatorID;
     private String content;
     private GregorianCalendar date;
-    private DLinkedList<Integer> sharedTo;
+    private DLinkedList<User> sharedWith;
 
     private String creatorName;
 
@@ -20,7 +19,7 @@ public class Post implements Comparable<Post> {
         setCreatorID(creatorID);
         setContent(content);
         setDate(date);
-        setSharedTo(sharedTo);
+        setSharedWith(sharedTo);
         //To add the post created to the user
         User user = Main.getUserFromID(creatorID);
         user.getPosts().insetSorted(this);
@@ -69,6 +68,8 @@ public class Post implements Comparable<Post> {
     }
 
     public void setContent(String content) {
+        //I add this to make sure the user dont save any content with ,
+        content = content.replaceAll(",", "،");
         this.content = content;
     }
 
@@ -105,30 +106,33 @@ public class Post implements Comparable<Post> {
         this.date = gc;
     }
 
-    public DLinkedList<Integer> getSharedTo() {
-        return sharedTo;
-    }
+
 
     public String sharedToToString() {
-        ListIterator<Integer> curr = sharedTo.iterator();
         String sharedToString = "";
-        while (curr.hasNext()) {
-            sharedToString += "," + curr.next();
+        for (User user:sharedWith){
+            sharedToString += "," + user.getId();
         }
         return sharedToString;
     }
 
-    public void setSharedTo(DLinkedList<Integer> sharedTo) {
+    public void setSharedWith(DLinkedList<Integer> sharedTo) {
+        sharedWith = new DLinkedList<>();
         sharedTo.removeDuplicates();
-        ListIterator<Integer> currInt = sharedTo.iterator();
         User creator = Main.getUserFromID(creatorID);
         //To make sure the person he want to share the post with is his friend
-        while (currInt.hasNext()) {
-            User friend = creator.getFriendFromId(currInt.next());
+        for (Integer currInt: sharedTo){
+            User friend = creator.getFriendFromId(currInt);
+
             if (friend == null)
                 throw new AlertException("This user can only share to his friends.");
+
+            sharedWith.insetSorted(friend);
         }
-        this.sharedTo = sharedTo;
+    }
+
+    public DLinkedList<User> getSharedWith() {
+        return sharedWith;
     }
 
     //To make sure the id does not exist
@@ -145,7 +149,6 @@ public class Post implements Comparable<Post> {
         }
     }
 
-
     //To sort the posts making the newest first
     @Override
     public int compareTo(Post o) {
@@ -154,12 +157,26 @@ public class Post implements Comparable<Post> {
 
     @Override
     public String toString() {
-        return "ID: " + id + ", CreatorID: " + creatorID + ", Content: " + content + ", Date: " + dateToString() + ", sharedTo: " + sharedToToString();
-    }
-
-    public String print() {
         return id + "," + creatorID + "," + content + ","
                 + dateToString() + sharedToToString();
+    }
+
+    public String sharedWithNames(){
+        String sharedWithNames = "";
+        for (User user:sharedWith){
+            sharedWithNames += ", "+user.getName();
+        }
+        return sharedWithNames.replaceFirst(",","");
+    }
+
+    public String postCreatedPrint(){
+        return "- Post ID: "+id+", Content: "+content+", "+dateToString()+", Shared with: "
+                +sharedWithNames();
+    }
+
+    public String postSharedWithPrint(){
+        return "- Post ID: "+id+", Content: "+content+", "+dateToString()+", Creator: "
+                +creatorName;
     }
 
     @Override
