@@ -4,27 +4,24 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextField;
 
 import java.util.ListIterator;
 
 public class DeletePost implements EventHandler<ActionEvent> {
 
     int postID;
-    boolean confirmation;
 
-    public DeletePost(int id, boolean confirmation) {
+    public DeletePost(int id) {
         this.postID = id;
-        this.confirmation = confirmation;
     }
 
     public void handle(ActionEvent event) {
 
-        deletePost(postID, confirmation);
+        deletePost(postID);
 
     }
 
-    private void deletePost(int postID, boolean confirmation) {
+    private void deletePost(int postID) {
         if (postID < 0) {
             throw new AlertException("Invalid Post ID");
         }
@@ -53,18 +50,17 @@ public class DeletePost implements EventHandler<ActionEvent> {
             throw new AlertException("The post does not exists");
         }
 
-        if (confirmation) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation");
-            alert.setHeaderText(null);
-            alert.setContentText("Are you sure you want to delete the post with id " + postID + " ?");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText(null);
+        alert.setContentText("Are you sure you want to delete the post with id " + postID + " ?");
 
-            if (alert.showAndWait().get() != ButtonType.OK)
-                throw new AlertException("The post deleted cancelled");
-        }
+        if (alert.showAndWait().get() != ButtonType.OK)
+            throw new AlertException("The post deleted cancelled");
+
 
         //To delete the post from the other users shared with
-        for (User currUser: post.getSharedWith()) {
+        for (User currUser : post.getSharedWith()) {
             currUser.getPostsSharedWith().delete(post);
         }
 

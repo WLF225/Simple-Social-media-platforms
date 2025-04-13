@@ -50,7 +50,7 @@ public class UserMenu extends Pane {
 
         buttons[4].setOnAction(event -> {
             try {
-                new DeleteUser(user.getId(), true).handle(null);
+                new DeleteUser(user.getId()).handle(null);
                 buttons[6].fire();
             }catch (AlertException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);

@@ -55,6 +55,10 @@ public class SaveToFiles implements EventHandler<ActionEvent> {
                  PrintWriter friendsPR = new PrintWriter(friendsFile);
                  PrintWriter postsFR = new PrintWriter(postsFile);) {
 
+                userPR.println("User ID,Name,Age");
+                friendsPR.println("User ID,Friends");
+                postsFR.println("Posts ID,Creator ID,Content,Creation Date,Shared With");
+
                 ListIterator<User> currUser = Main.userList.iterator();
 
                 if (comboBox.getValue().equals("Ascending")) {

@@ -140,7 +140,7 @@ public class User implements Comparable<User> {
     public int postsLast3Weeks(){
         int postsNum = 0;
         for (Post post:posts) {                                                 //3 weeks millis
-            if (post.getDate().getTimeInMillis() - System.currentTimeMillis() < 3*7*24*60*60*1000) {
+            if (System.currentTimeMillis() - post.getDate().getTimeInMillis() < 3*7*24*60*60*1000) {
                 postsNum++;
             }
         }

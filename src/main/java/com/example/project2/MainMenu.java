@@ -88,7 +88,7 @@ public class MainMenu extends Pane {
                         }
                     }
                 } else {
-                    stage.setScene(new Scene(new CreateNewUser(stage, this)));
+                    stage.setScene(new Scene(new CreateNewUser(stage)));
                 }
             }
         });

@@ -41,7 +41,6 @@ public class ViewPost extends Pane {
             textField.setDisable(true);
         }
 
-
         textFields[2].setDisable(false);
 
         Label[] labels = {new Label("Post ID: "), new Label("Creator ID: "), new Label("Content: "),
@@ -99,7 +98,7 @@ public class ViewPost extends Pane {
             try {
                 int id = Integer.parseInt(textFields[0].getText());
 
-                new DeletePost(id, true).handle(null);
+                new DeletePost(id).handle(null);
                 Alert informationAlert = new Alert(Alert.AlertType.INFORMATION);
                 informationAlert.setTitle("Success");
                 informationAlert.setHeaderText(null);
@@ -131,7 +130,7 @@ public class ViewPost extends Pane {
             }
         }
         if (!manage) {
-            textFields[2].setDisable(true);
+            textFields[2].setEditable(false);
         }
 
         VBox labelsVB;

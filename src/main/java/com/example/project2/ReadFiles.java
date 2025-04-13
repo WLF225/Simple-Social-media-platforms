@@ -46,6 +46,10 @@ public class ReadFiles implements EventHandler<ActionEvent> {
             boolean cond = true;
             int lineNum = 1;
             while (scanner.hasNextLine()) {
+                if (lineNum == 1) {
+                    scanner.nextLine();
+                    lineNum++;
+                }
                 try {
                     String line = scanner.nextLine();
                     String[] parts = line.split(",");
@@ -93,6 +97,10 @@ public class ReadFiles implements EventHandler<ActionEvent> {
             scanner = new Scanner(friendsFile);
             lineNum = 1;
             while (scanner.hasNextLine()) {
+                if (lineNum == 1) {
+                    scanner.nextLine();
+                    lineNum++;
+                }
                 try {
                     String line = scanner.nextLine();
                     String[] parts = line.split(",");
@@ -158,6 +166,10 @@ public class ReadFiles implements EventHandler<ActionEvent> {
             scanner = new Scanner(postsFile);
             lineNum = 1;
             while (scanner.hasNextLine()) {
+                if (lineNum == 1) {
+                    scanner.nextLine();
+                    lineNum++;
+                }
                 try {
                     String line = scanner.nextLine();
                     String[] parts = line.split(",");

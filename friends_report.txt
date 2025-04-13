@@ -1,6 +1,32 @@
 Friends Report
 ------------------------
-User: Layla, his friends:  Ahmed
-User: Khaled, his friends:  Ahmed, Fatima
-User: Fatima, his friends:  Ahmed, Khaled
-User: Ahmed, his friends:  Fatima, Khaled, Layla
+User: Ahmad, his friends:  Ali, Ameer, Habeeb, Hareth, Hazem, Khaled, Malek, Naser, Sameer, Tawfeeq, Waseem, Zaki
+User: Ali, his friends:  Ahmad, Ameer, Anas, Habeeb, Hamada, Khaled, Mamoun, Moath, Naser, Othman, Tawfeeq, Waseem, Zaki
+User: Ameer, his friends:  Ahmad, Ali, Habeeb, Hareth, Khaleel, Naser, Nizar, Ramzy, Saif, Sameer, Waseem
+User: Anas, his friends:  Ali, Asem, Hamada, Ibrahim, Khaleel, Malek, Mohammad, Naser, Nizar, Othman, Ramzy
+User: Asem, his friends:  Anas, Hareth, Hazem, Jamal, Khaled, Malek, Mohammad, Nizar, Othman, Tawfeeq, Waseem, Yahya, Zaid
+User: Habeeb, his friends:  Ahmad, Ali, Ameer, Hamada, Jamal, Mamoun, Mohammad, Naser, Saif, Salah, Sameer, Sami, Zaki
+User: Hamada, his friends:  Ali, Anas, Habeeb, Hareth, Ibrahim, Khaleel, Malek, Moath, Sami, Tawfeeq, Yahya, Zaki
+User: Hareth, his friends:  Ahmad, Ameer, Asem, Hamada, Jamal, Malek, Moath, Othman, Sameer, Sami, Yahya
+User: Hazem, his friends:  Ahmad, Asem, Ibrahim, Moath, Nizar, Othman, Ramzy, Saif, Salah, Sameer, Tawfeeq, Zaid
+User: Ibrahim, his friends:  Anas, Hamada, Hazem, Jamal, Khaled, Mamoun, Moath, Salah, Sameer, Yahya, Zaki
+User: Jamal, his friends:  Asem, Habeeb, Hareth, Ibrahim, Khaleel, Malek, Naser, Salah, Sameer, Sami, Waseem, Zaki
+User: Khaled, his friends:  Ahmad, Ali, Asem, Ibrahim, Malek, Moath, Nizar, Tawfeeq, Yahya, Zaid, Zaki
+User: Khaleel, his friends:  Ameer, Anas, Hamada, Jamal, Mamoun, Mohammad, Naser, Saif, Sami, Zaid
+User: Malek, his friends:  Ahmad, Anas, Asem, Hamada, Hareth, Jamal, Khaled, Moath, Nizar, Othman, Waseem
+User: Mamoun, his friends:  Ali, Habeeb, Ibrahim, Khaleel, Mohammad, Naser, Salah, Sami, Waseem, Zaid
+User: Moath, his friends:  Ali, Hamada, Hareth, Hazem, Ibrahim, Khaled, Malek, Othman, Tawfeeq, Yahya, Zaid
+User: Mohammad, his friends:  Anas, Asem, Habeeb, Khaleel, Mamoun, Othman, Ramzy, Saif, Sami, Yahya, Zaid
+User: Naser, his friends:  Ahmad, Ali, Ameer, Anas, Habeeb, Jamal, Khaleel, Mamoun, Nizar, Tawfeeq
+User: Nizar, his friends:  Ameer, Anas, Asem, Hazem, Khaled, Malek, Naser, Othman, Tawfeeq, Waseem
+User: Othman, his friends:  Ali, Anas, Asem, Hareth, Hazem, Malek, Moath, Mohammad, Nizar, Saif, Salah, Yahya, Zaki
+User: Ramzy, his friends:  Ameer, Anas, Hazem, Mohammad, Saif, Salah, Sameer, Waseem, Yahya, Zaid
+User: Saif, his friends:  Ameer, Habeeb, Hazem, Khaleel, Mohammad, Othman, Ramzy, Salah, Yahya, Zaid
+User: Salah, his friends:  Habeeb, Hazem, Ibrahim, Jamal, Mamoun, Othman, Ramzy, Saif, Sameer, Sami, Waseem
+User: Sameer, his friends:  Ahmad, Ameer, Habeeb, Hareth, Hazem, Ibrahim, Jamal, Ramzy, Salah, Sami, Waseem, Zaid, Zaki
+User: Sami, his friends:  Habeeb, Hamada, Hareth, Jamal, Khaleel, Mamoun, Mohammad, Salah, Sameer, Waseem, Zaid, Zaki
+User: Tawfeeq, his friends:  Ahmad, Ali, Asem, Hamada, Hazem, Khaled, Moath, Naser, Nizar, Zaid, Zaki
+User: Waseem, his friends:  Ahmad, Ali, Ameer, Asem, Jamal, Malek, Mamoun, Nizar, Ramzy, Salah, Sameer, Sami, Yahya
+User: Yahya, his friends:  Asem, Hamada, Hareth, Ibrahim, Khaled, Moath, Mohammad, Othman, Ramzy, Saif, Waseem
+User: Zaid, his friends:  Asem, Hazem, Khaled, Khaleel, Mamoun, Moath, Mohammad, Ramzy, Saif, Sameer, Sami, Tawfeeq
+User: Zaki, his friends:  Ahmad, Ali, Habeeb, Hamada, Ibrahim, Jamal, Khaled, Othman, Sameer, Sami, Tawfeeq

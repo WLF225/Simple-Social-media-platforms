@@ -54,7 +54,7 @@ public class ViewUsers extends Pane {
                 errorAlert.setHeaderText(null);
                 try {
                     int friendID = Integer.parseInt(textFields[0].getText());
-                    new DeleteFriend(user.getId(), friendID, true).handle(null);
+                    new DeleteFriend(user.getId(), friendID).handle(null);
 
                     Alert informationAlert = new Alert(Alert.AlertType.INFORMATION);
                     informationAlert.setTitle("Success");

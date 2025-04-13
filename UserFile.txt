@@ -1,4 +1,0 @@
-1 ,Ahmed, 25
-2,Fatima,30
-3,Khaled,22
-4,Layla,28

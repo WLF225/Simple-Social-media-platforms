@@ -73,7 +73,7 @@ public class Reports extends Pane {
             comboBox.getSelectionModel().selectFirst();
             alert.getDialogPane().setContent(comboBox);
             if (alert.showAndWait().get() == ButtonType.OK) {
-                try (PrintWriter pw = new PrintWriter("friends.txt")) {
+                try (PrintWriter pw = new PrintWriter("posts_shared.txt")) {
                     pw.println("Posts Shared Report");
                     pw.println("------------------------");
                     if (comboBox.getValue().equals("Ascending")) {

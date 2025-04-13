@@ -4,61 +4,61 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import java.util.ListIterator;
 
 public class DeleteUser implements EventHandler<ActionEvent> {
 
     int id;
-    boolean confirmation;
 
-    public DeleteUser(int id,boolean confirmation) {
+
+    public DeleteUser(int id) {
         this.id = id;
-        this.confirmation = confirmation;
+
     }
 
     public void handle(ActionEvent event) {
 
-        deleteUser(id,confirmation);
+        deleteUser(id);
 
     }
 
-    private void deleteUser(int id, boolean confirmation) {
+    private void deleteUser(int id) {
 
         User user = Main.getUserFromID(id);
         if (user == null) {
-            throw new AlertException("The user with id "+id+" does not exists");
+            throw new AlertException("The user with id " + id + " does not exists");
         }
 
-        if (confirmation) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation");
-            alert.setHeaderText(null);
-            alert.setContentText("Are you sure you want to delete the user with id "+id+
-                    " ?, this will delete all his posts.");
 
-            if(alert.showAndWait().get() != ButtonType.OK){
-                throw new AlertException("The user delete cancelled");
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText(null);
+        alert.setContentText("Are you sure you want to delete the user with id " + id +
+                " ?, this will delete all his posts.");
+
+        if (alert.showAndWait().get() != ButtonType.OK) {
+            throw new AlertException("The user delete cancelled");
+        }
+
+
+        //To remove the user from all the posts shared with him
+        for (Post currPost : user.getPostsSharedWith()) {
+            currPost.getSharedWith().delete(user);
+        }
+
+        //To remove the posts he created from shared with friends
+        for (Post currPost : user.getPosts()) {
+            for (User currFriend : currPost.getSharedWith()) {
+                currFriend.getPostsSharedWith().delete(currPost);
             }
         }
 
+        //To remove him from friends list to other users
+        for (User currFriend : user.getFriends()) {
+            currFriend.getFriends().delete(user);
+        }
 
-            //To delete all his friends and posts from and to them
-
-            ListIterator<User> iterator = user.getFriends().iterator();
-
-            while (iterator.hasNext())
-                new DeleteFriend(id,iterator.next().getId(),false).handle(null);
-
-            //To delete the user from the list
-            Main.userList.delete(user);
-
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Success");
-            alert.setHeaderText(null);
-            alert.setContentText("User with id "+id+" deleted successfully");
-            alert.showAndWait();
-
-
+        //To remove him from the list
+        Main.userList.delete(user);
 
     }
 }

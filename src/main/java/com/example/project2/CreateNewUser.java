@@ -17,7 +17,7 @@ public class CreateNewUser extends Pane {
 
     public static int userID = 1;
 
-    public CreateNewUser(Stage stage, Pane pane) {
+    public CreateNewUser(Stage stage) {
 
         stage.setTitle("Create New User");
 
@@ -57,11 +57,7 @@ public class CreateNewUser extends Pane {
         imageView.setLayoutY(100);
 
         //Buttons code
-        buttons[0].setOnAction(event -> {
-            if (pane instanceof MainMenu) {
-                stage.setScene(new Scene(new MainMenu(stage)));
-            }
-        });
+        buttons[0].setOnAction(event -> stage.setScene(new Scene(new MainMenu(stage))));
 
         buttons[1].setOnAction(event -> {
             textFields[0].setText(userID+"");
@@ -93,9 +89,7 @@ public class CreateNewUser extends Pane {
                 userID++;
                 buttons[1].fire();
 
-                if (pane instanceof MainMenu) {
-                    stage.setScene(new Scene(new MainMenu(stage)));
-                }
+                buttons[0].fire();
             }catch (AlertException e){
                 errorAlert.setTitle("Error");
                 errorAlert.setHeaderText(null);
